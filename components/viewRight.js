@@ -10,6 +10,8 @@ import {
 } from 'react-router-dom'
 import Version from './componentRight/version'
 
+var id = ''
+
 const Header = ({match}) => (
   <header>
     <nav>
@@ -26,7 +28,7 @@ const Header = ({match}) => (
   </header>
 )
 const ViewVersion = () => (
-    <Version versionID='123'/>
+    <Version ID={id}/>
 )
 const ViewSoftwareDefine = () => (
     <div>
@@ -35,18 +37,24 @@ const ViewSoftwareDefine = () => (
 )
 
 export default class viewRight extends React.Component {
+    constructor(props){
+        super(props)
+        id = props.match.params.id
+    }
 
     render() {
         var match = this.props.match
-        console.log(match.params.id)
+        // console.log(match.params.id)
         return (
             <div className="col-md-6 col-sm-6 col-lg-6 ">
                 <Header match={match}/>
-                {/*<Switch>*/}
-                    <Route exact path={match.url} component={ViewVersion}/>
+                <Switch>
                     <Route path={`${match.url}/softwareDefine`} component={ViewSoftwareDefine}/>
                     <Route path={`${match.url}/measure`} component={ViewSoftwareDefine}/>                    
-                {/*</Switch>*/}
+                    <Route exact path={match.url} >
+                        <Version ID={match.params.id} />
+                    </Route>
+                </Switch>
             </div>
         )
         // col-md-10 col-md-offset-2 main infoPanel

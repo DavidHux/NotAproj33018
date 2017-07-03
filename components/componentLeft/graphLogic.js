@@ -4,6 +4,8 @@ import echarts from 'echarts'
 
 import serviceStore from '../../stores/serviceStore'
 import ServiceActions from '../../actions/ServiceActions'
+var fdata = require('../../data/forcedata')
+// var ecConfig = echarts.config.EVENT
 
 // const GraphLogic = () => (
 
@@ -13,12 +15,16 @@ export default class GraphLogic extends React.Component {
     constructor(props) {
         super(props)
     }
+    eConsole(param) {
+        console.log(param)
+    }
 
     componentDidMount() {
         var myChart = echarts.init(document.getElementById('myChart0'));
         //npm dependences graph http://echarts.baidu.com/demo.html#graph-npm
         myChart.showLoading();
-        $.getJSON('/data/asset/data/npmdepgraph.min10.json', function (json) {
+        $.getJSON('/data/asset/data/npmdepgraph.min10.json', function (json1) {
+            var json = fdata
             ServiceActions.updateService(json)
             myChart.hideLoading();
             myChart.setOption({
@@ -29,26 +35,30 @@ export default class GraphLogic extends React.Component {
                 animationEasingUpdate: 'quinticInOut',
                 series: [{
                     type: 'graph',
-                    layout: 'none',
+                    layout: 'force',
+                    force: {
+                    repulsion: 100
+                    },
                     // progressiveThreshold: 700,
                     data: json.nodes.map(function (node) {
                         return {
-                            x: node.x,
-                            y: node.y,
+                            x: null,
+                            y: null,
+                            draggable: true,
                             id: node.id,
-                            name: node.label,
-                            symbolSize: 5,
+                            name: node.id,
+                            symbolSize: 10,
                             itemStyle: {
                                 normal: {
                                     color: node.color
                                 }
                             }
-                        };
+                        }; 
                     }),
-                    edges: json.edges.map(function (edge) {
+                    links: json.links.map(function (edge) {
                         return {
-                            source: edge.sourceID,
-                            target: edge.targetID
+                            source: edge.source,
+                            target: edge.target
                         };
                     }),
                     label: {
@@ -58,17 +68,18 @@ export default class GraphLogic extends React.Component {
                         }
                     },
                     roam: true,
-                    focusNodeAdjacency: true,
-                    lineStyle: {
-                        normal: {
-                            width: 1,
-                            curveness: 0.3,
-                            opacity: 0.7
-                        }
-                    }
+                    focusNodeAdjacency: true
+                    // lineStyle: {
+                    //     normal: {
+                    //         width: 1,
+                    //         curveness: 0.3,
+                    //         opacity: 0.7
+                    //     }
+                    // }
                 }]
             }, true);
         });
+        myChart.on('click', this.eConsole)  
     }
 
     render() {
@@ -79,3 +90,32 @@ export default class GraphLogic extends React.Component {
         )
     }
 }
+
+// option = {
+//         legend: [{
+//             // selectedMode: 'single',
+//             data: categories.map(function (a) {
+//                 return a.name;
+//             })
+//         }],
+//         animation: false,
+//         series : [
+//             {
+//                 name: 'Les Miserables',
+//                 type: 'graph',
+//                 layout: 'force',
+//                 data: graph.nodes,
+//                 links: graph.links,
+//                 categories: categories,
+//                 roam: true,
+//                 label: {
+//                     normal: {
+//                         position: 'right'
+//                     }
+//                 },
+//                 force: {
+//                     repulsion: 100
+//                 }
+//             }
+//         ]
+//     };

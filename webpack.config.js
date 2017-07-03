@@ -37,6 +37,10 @@ module.exports = {
       '/data/asset/data/npmdepgraph.min10.json': {
         target: 'http://echarts.baidu.com',
         changeOrigin: true
+      },
+      '/api/v4/projects/419/repository/commits': {
+        target: 'https://git.njuics.cn',
+        changeOrigin: true
       }
     }
   }

@@ -18,15 +18,13 @@ export default class ListLogic extends React.Component {
     serviceStore.removeServiceChangeListener(this._onChange.bind(this));
   }
   _onChange() {
-    this.setState({servicelist: serviceStore.getServiceNameList()}, () => {
-      console.log('service list change', this.state.servicelist)
-    })
+    this.setState({servicelist: serviceStore.getServiceNameList()})
   }
   render() {
     if(this.state.servicelist != []){
       var list = this.state.servicelist.map((node, k) => {
         return (
-          <button type="button" className="list-group-item" key={k}>
+          <button type="button" className="list-group-item" key={k} onClick={ () => { location.href = '/#/logicView/' + node.id}}>
             <span className="navbar-right" >> &nbsp;</span>
             {node.id}</button>
         )
