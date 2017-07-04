@@ -4,7 +4,7 @@ import echarts from 'echarts'
 
 import serviceStore from '../../stores/serviceStore'
 import ServiceActions from '../../actions/ServiceActions'
-var fdata = require('../../data/forcedata')
+var fdata = require('../../data/mydata')
 // var ecConfig = echarts.config.EVENT
 
 // const GraphLogic = () => (
@@ -62,6 +62,7 @@ export default class GraphLogic extends React.Component {
                         };
                     }),
                     label: {
+                        show: true,
                         emphasis: {
                             position: 'right',
                             show: true
