@@ -30,10 +30,12 @@ module.exports = {
   plugins: [
     // new CommonsChunkPlugin('init.js'),
     // new OpenBrowserPlugin({
-    //   url: 'http://localhost:8080'
+    //  url: 'http://localhost:8080'
     // })
   ],
   devServer: {
+    host: '0.0.0.0',
+    disableHostCheck: true,
     proxy: {
       '/data/asset/data/npmdepgraph.min10.json': {
         target: 'http://echarts.baidu.com',

@@ -4,8 +4,7 @@
   "description": "an extremely simple demo for the Flux architecture",
   "main": "index.jsx",
   "scripts": {
-    "start": "webpack-dev-server --progress",
-    "build": "webpack",
+    "start": "webpack-dev-server --progress --host 0.0.0.0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
