@@ -5,6 +5,7 @@
   "main": "index.jsx",
   "scripts": {
     "start": "webpack-dev-server --progress",
+    "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

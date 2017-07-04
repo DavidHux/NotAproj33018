@@ -5,6 +5,7 @@ var OpenBrowserPlugin = require('open-browser-webpack-plugin');
 module.exports = {
   entry: './index.js',
   output: {
+    // path: path.join(__dirname, 'build'),
     filename: 'bundle.js'
   },
   resolve: {
@@ -28,9 +29,9 @@ module.exports = {
   },
   plugins: [
     // new CommonsChunkPlugin('init.js'),
-    new OpenBrowserPlugin({
-      url: 'http://localhost:8080'
-    })
+    // new OpenBrowserPlugin({
+    //   url: 'http://localhost:8080'
+    // })
   ],
   devServer: {
     proxy: {

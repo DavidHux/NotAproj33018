@@ -36,10 +36,10 @@ export default class version extends React.Component {
             if (json == null)
                 return
             var gitgraph = new GitGraph({
-                template: "metro", // or blackarrow
-                orientation: "vertical",
-                // author: "John Doe",
-                mode: "extended" // or compact if you don't want the messages
+                template: myTemplateConfig, // or blackarrow
+                // orientation: "vertical",
+                // // author: "John Doe",
+                // mode: "extended" // or compact if you don't want the messages
             });
             var branches = []
             var master = gitgraph.branch("master");
@@ -50,21 +50,21 @@ export default class version extends React.Component {
             }
         }
         var myTemplateConfig = {
-            colors: ["#F00", "#0F0", "#00F"], // branches colors, 1 per column
+            colors: ["#979797", "#008fb5", "#f1c109"], // branches colors, 1 per column
             branch: {
                 lineWidth: 8,
-                spacingX: 50,
+                spacingX: 20,
                 showLabel: true, // display branch names on graph
             },
             commit: {
-                spacingY: -80,
+                spacingY: -50,
                 dot: {
                     size: 12
                 },
                 message: {
                     displayAuthor: true,
-                    displayBranch: false,
-                    displayHash: false,
+                    displayBranch: true,
+                    displayHash: true,
                     font: "normal 12pt Arial"
                 },
                 shouldDisplayTooltipsInCompactMode: false, // default = true
@@ -101,6 +101,9 @@ export default class version extends React.Component {
     }
     commit(branch, o) {
         branch.commit({
+            lineWidth: 8,
+            spacingX: 20,
+            showLabel: true,
             dotColor: "white",
             dotSize: 10,
             dotStrokeWidth: 10,
