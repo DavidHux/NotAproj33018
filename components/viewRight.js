@@ -9,6 +9,7 @@ import {
     Link 
 } from 'react-router-dom'
 import Version from './componentRight/version'
+import SoftwareDefine from './componentRight/softwareDefine'
 
 var id = ''
 
@@ -28,12 +29,10 @@ const Header = ({match}) => (
   </header>
 )
 const ViewVersion = () => (
-    <Version ID={id}/>
+    <Version/>
 )
 const ViewSoftwareDefine = () => (
-    <div>
-        123
-    </div>
+    <SoftwareDefine ID={id} />
 )
 
 export default class viewRight extends React.Component {
