@@ -33,6 +33,8 @@ module.exports = {
     // })
   ],
   devServer: {
+    host: '0.0.0.0',
+    disableHostCheck: true,
     proxy: {
       '/data/asset/data/npmdepgraph.min10.json': {
         target: 'http://echarts.baidu.com',
