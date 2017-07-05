@@ -2,27 +2,32 @@
 var fdata = {
     "nodes": [{
             "id": "监控预警系统",
-            "group": 1
+            "group": 1,
+            size: 20
         },
         {
             "id": "天气",
             "group": 2,
-            "color": "#2f4554"
+            "color": "#2f4554",
+            size: 15
         },
         {
             "id": "台风",
             "group": 2,
-            "color": "#2f4554"
+            "color": "#2f4554",
+            size: 15
         },
         {
             "id": "水文",
             "group": 2,
-            "color": "#2f4554"
+            "color": "#2f4554",
+            size: 15
         },
         {
             "id": "信息发布",
             "group": 2,
-            "color": "#2f4554"
+            "color": "#2f4554",
+            size: 15
         },
         // {
         //     "id": "广东水文",

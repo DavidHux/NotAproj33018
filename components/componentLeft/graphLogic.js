@@ -155,7 +155,7 @@ export default class GraphLogic extends React.Component {
             draggable: true,
             id: node.id,
             name: node.id,
-            symbolSize: 10,
+            symbolSize: node.size | 10,
             itemStyle: {
                 normal: {
                     color: node.color
