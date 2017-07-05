@@ -45,7 +45,7 @@ export default class version extends React.Component {
             } else {
                 var datas = data[this.state.num - 2]
                 console.log(datas)
-                processJSON(datas).bind(this)
+                processJSON(datas)
             }
 
         function setHeader(xhr) {
@@ -57,11 +57,40 @@ export default class version extends React.Component {
             if (json == null)
                 return
             var gitgraph = new GitGraph({
-                template: myTemplateConfig, // or blackarrow
+            template: {
+            colors: ["#979797", "#008fb5", "#f1c109"], // branches colors, 1 per column
+            branch: {
+                lineWidth: 8,
+                spacingX: 20,
+                showLabel: true, // display branch names on graph
+            },
+            commit: {
+                spacingY: -50,
+                dot: {
+                    size: 12
+                },
+                message: {
+                    displayAuthor: true,
+                    displayBranch: true,
+                    displayHash: true,
+                    font: "normal 12pt Arial"
+                },
+                shouldDisplayTooltipsInCompactMode: false, // default = true
+                tooltipHTMLFormatter: function (commit) {
+                    return "" + commit.sha1 + "" + ": " + commit.message;
+                }
+            }
+            }, // or blackarrow
+            orientation: "vertical",
+            author: "John Doe",
+            mode: "extended" // or compact if you don't want the messages
+        });
+            // new GitGraph({
+                // template: myTemplate, // or blackarrow
                 // orientation: "vertical",
                 // // author: "John Doe",
                 // mode: "extended" // or compact if you don't want the messages
-            });
+            // });
             var branches = []
             var master = gitgraph.branch("master");
             for (var i = json.length - 1; i >= 0; i--) {
@@ -179,7 +208,7 @@ export default class version extends React.Component {
         }
         return (
             <div>
-                <h3> {this.props.ID } git graph.</h3>
+                <h3> {this.props.ID }</h3>
                 <canvas id = "gitGraph" style = {{ width: '300px' }} > </canvas>                    
             </div>
         )
