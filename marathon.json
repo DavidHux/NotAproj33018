@@ -1,5 +1,5 @@
 {
-  "id": "/nap/typhone",
+  "id": "${IMAGE}",
   "cmd": null,
   "cpus": 0.8,
   "mem": 512,
