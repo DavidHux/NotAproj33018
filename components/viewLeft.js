@@ -34,7 +34,7 @@ const Header = () => (
       <ul className="nav nav-tabs">
         <li role="presentation" id='idTabLogic' onClick={() => activeChange('idTabLogic')} className="active"><Link to='/logicView/version'>逻辑视图</Link></li>
         <li role="presentation" id='idTabPhysics' onClick={() => activeChange('idTabPhysics')}><Link to='/physicsView/version'>物理视图</Link></li>
-        <li role="presentation" id='idd' ><Link to='/logicView/version'>right</Link></li>
+        {/*<li role="presentation" id='idd' ><Link to='/logicView/version'>right</Link></li>*/}
       </ul>
     </nav>
   </header>
