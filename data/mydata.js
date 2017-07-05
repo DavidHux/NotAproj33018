@@ -58,7 +58,12 @@ var fdata = {
         //     "id": "上海水文",
         //     "group": 3,
         //     "color": "#d48265"
-        // },
+        // },,
+        {
+            "id": "南京水文",
+            "group": 3,
+            "color": "#d48265"
+        },
         {
             "id": "微博",
             "group": 4,
@@ -83,11 +88,6 @@ var fdata = {
             "id": "暴雪预警",
             "group": 5,
             "color": "#6e7074"
-        },
-        {
-            "id": "Tiane No1",
-            "group": 6,
-            "color": "#749f83"
         }
     ],
     "links": [{
@@ -108,6 +108,11 @@ var fdata = {
         {
             "source": "监控预警系统",
             "target": "信息发布",
+            "value": 6
+        },
+        {
+            "source": "水文",
+            "target": "南京水文",
             "value": 6
         },
         // {
@@ -168,11 +173,6 @@ var fdata = {
         {
             "source": "天气",
             "target": "暴雪预警",
-            "value": 6
-        },
-        {
-            "source": "台风",
-            "target": "Tiane No1",
             "value": 6
         }
     ]
