@@ -11,7 +11,7 @@ export default class softwareDefine extends React.Component {
     render() {
         return (
             <div>
-                <h3>  软件定义.</h3>
+                <h3>  软件定义</h3>
                 <img src="../../data/softdefine.png" />                    
             </div>
         )
