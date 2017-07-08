@@ -45,7 +45,7 @@ export default class viewRight extends React.Component {
         var match = this.props.match
         // console.log(match.params.id)
         return (
-            <div className="col-md-6 col-sm-6 col-lg-6 ">
+            <div className="col-md-4 col-sm-4 col-lg-4 ">
                 <Header match={match}/>
                 <Switch>
                     <Route path={`${match.url}/softwareDefine`} component={ViewSoftwareDefine}/>

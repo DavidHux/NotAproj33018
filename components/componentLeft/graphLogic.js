@@ -71,7 +71,6 @@ var data1 = [
     ],
     []
 ]
-var timeo = [95000, 160000, 180000, 195000, 220000]
 var data2 = [
     [{
             "source": "水文",
@@ -136,6 +135,8 @@ var data2 = [
     []
 ]
 var myChart = null
+var timeo = [95000, 160000, 180000, 195000, 220000]
+// var timeo = [5000, 10000, 15000, 20000, 25000]
 
 export default class GraphLogic extends React.Component {
     constructor(props) {
@@ -143,8 +144,8 @@ export default class GraphLogic extends React.Component {
     }
     eConsole(param) {
         console.log(param)
-        if(param.dataType == 'node'){
-            window.location.href = '/#/logicView/'+param.name
+        if (param.dataType == 'node') {
+            window.location.href = '/#/logicView/' + param.name
         }
     }
 
@@ -168,6 +169,30 @@ export default class GraphLogic extends React.Component {
             source: edge.source,
             target: edge.target
         };
+    }
+
+    startPolling() {
+        var that = this
+        var timeoutindex = 0
+        console.log('data14', data1[4])
+        setTimeout(newdata, timeo[timeoutindex])
+
+        function newdata() {
+            var dataTnodes = fdata.nodes.concat(data1[timeoutindex])
+            var dataTlinks = fdata.links.concat(data2[timeoutindex])
+            var newdd = {nodes: dataTnodes, links: dataTlinks}
+            ServiceActions.updateService(newdd)
+            console.log(dataTlinks, dataTnodes)
+            myChart.setOption({
+                series: [{
+                    data: dataTnodes.map(that.modNode),
+                    links: dataTlinks.map(that.modLink)
+                }]
+            })
+            if (timeoutindex < 4) {
+                setTimeout(newdata, timeo[++timeoutindex])
+            }
+        }
     }
 
     componentDidMount() {
@@ -218,93 +243,12 @@ export default class GraphLogic extends React.Component {
             }, true);
         });
         myChart.on('click', this.eConsole)
-            setTimeout(() => {
-                var i = 0
-                console.log(addindex)
-                console.log(data1[i])
-                var dataTnodes = fdata.nodes.concat(data1[i])
-                var dataTlinks = fdata.links.concat(data2[i])
-                console.log(dataTlinks, dataTnodes)
-                myChart.setOption({
-                    series: [{
-                        data: dataTnodes.map(that.modNode),
-                        links: dataTlinks.map(that.modLink)
-                    }]
-                });
-
-            }, timeo[0])
-            setTimeout(() => {
-                var i = 1
-                var dataTnodes = fdata.nodes.concat(data1[i])
-                var dataTlinks = fdata.links.concat(data2[i])
-                console.log(dataTlinks, dataTnodes)
-                myChart.setOption({
-                    series: [{
-                        data: dataTnodes.map(that.modNode),
-                        links: dataTlinks.map(that.modLink)
-                    }]
-                });
-
-            }, timeo[1])
-            setTimeout(() => {
-                var i = 2
-                var dataTnodes = fdata.nodes.concat(data1[i])
-                var dataTlinks = fdata.links.concat(data2[i])
-                console.log(dataTlinks, dataTnodes)
-                myChart.setOption({
-                    series: [{
-                        data: dataTnodes.map(that.modNode),
-                        links: dataTlinks.map(that.modLink)
-                    }]
-                });
-
-            }, timeo[2])
-            setTimeout(() => {
-                var i = 3
-                var dataTnodes = fdata.nodes.concat(data1[i])
-                var dataTlinks = fdata.links.concat(data2[i])
-                console.log(dataTlinks, dataTnodes)
-                myChart.setOption({
-                    series: [{
-                        data: dataTnodes.map(that.modNode),
-                        links: dataTlinks.map(that.modLink)
-                    }]
-                });
-
-            }, timeo[3])
-            setTimeout(() => {
-                var i = 4
-                var dataTnodes = fdata.nodes.concat(data1[i])
-                var dataTlinks = fdata.links.concat(data2[i])
-                console.log(dataTlinks, dataTnodes)
-                myChart.setOption({
-                    series: [{
-                        data: dataTnodes.map(that.modNode),
-                        links: dataTlinks.map(that.modLink)
-                    }]
-                });
-
-            }, timeo[4])
-        // setInterval(function () {
-
-        //     if(addindex >= data1.length)
-        //         return
-        //     fdata.nodes.push(data1[addindex])
-        //     fdata.links.push(data2[addindex])
-        //     addindex++
-
-        //     myChart.setOption({
-        //         series: [{
-        //             data: fdata.nodes.map(that.modNode),
-        //             links: fdata.links.map(that.modLink)
-        //         }]
-        //     });
-        // }, 5000);
+        this.startPolling()
     }
 
     render() {
         return (
-             <div>
+            <div >
                 <div id="myChart0" style={{ "width": "100%", "height": "400px"}}></div>
             </div>
         )

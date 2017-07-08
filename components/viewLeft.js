@@ -41,9 +41,12 @@ const Header = () => (
 )
 const ViewLogic = () => (
     <div>
+        <div className="col-md-8 col-sm-8 col-lg-8">
         <GraphLogic />
-        <br/>
+        </div>
+        <div className="col-md-4 col-sm-4 col-lg-4">
         <ListLogic />
+        </div>
     </div>
 )
 const ViewPhysics = () => (
@@ -58,7 +61,7 @@ export default class viewLeft extends React.Component {
 
     render() {
         return (
-            <div className="col-md-6 col-sm-6 col-lg-6">
+            <div className="col-md-8 col-sm-8 col-lg-8">
                 <Header />
                 <Redirect from='/' to='/logicView/version' />
                 {/*<Redirect from='/physicsView' to='/physicsView/version' />*/}
