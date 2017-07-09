@@ -136,7 +136,7 @@ var data2 = [
 ]
 var myChart = null
 // var timeo = [95000, 160000, 180000, 195000, 220000]
-var timeo = [47000, 111000, 125000, 137000, 149000]
+var timeo = [53000, 64000, 14000, 23000, 12000]
 
 // var timeo = [5000, 10000, 15000, 20000, 25000]
 
@@ -202,8 +202,7 @@ export default class GraphLogic extends React.Component {
         myChart = echarts.init(document.getElementById('myChart0'));
         //npm dependences graph http://echarts.baidu.com/demo.html#graph-npm
         myChart.showLoading();
-        // $.getJSON('/data/asset/data/npmdepgraph.min10.json', 
-        // function (json1) {
+        $.getJSON('/data/asset/data/npmdepgraph.min10.json', function (json1) {
             var json = fdata
             ServiceActions.updateService(json)
             myChart.hideLoading();
@@ -244,7 +243,7 @@ export default class GraphLogic extends React.Component {
                     // }
                 }]
             }, true);
-        // });
+        });
         myChart.on('click', this.eConsole)
         this.startPolling()
     }
