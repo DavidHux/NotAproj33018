@@ -28,9 +28,9 @@ const Header = ({match}) => (
     </nav>
   </header>
 )
-const ViewVersion = () => (
-    <Version/>
-)
+// const ViewVersion = () => (
+//     <Version/>
+// )
 const ViewSoftwareDefine = () => (
     <SoftwareDefine ID={id} />
 )

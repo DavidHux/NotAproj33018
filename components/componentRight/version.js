@@ -18,11 +18,23 @@ export default class version extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            num: 0
+            num: 0,
+            gitGraph: null,
+            nodeAt: 2,
+            commits: []
         }
     }
     componentDidUpdate() {
         this.componentDidMount()
+    }
+
+    onNodeClick(param){
+        var yp = param.y / 50
+        if(yp == this.state.nodeAt){
+            return
+        }
+        this.state.nodeAt = yp
+        console.log('modified yp')
     }
 
     componentDidMount() {
@@ -34,7 +46,7 @@ export default class version extends React.Component {
             branch: {
                 lineWidth: 8,
                 spacingX: 20,
-                showLabel: true, // display branch names on graph
+                showLabel: false, // display branch names on graph
             },
             commit: {
                 spacingY: -50,
@@ -79,31 +91,33 @@ export default class version extends React.Component {
                 console.log(json)
                 if (json == null)
                     return
-                var gitgraph = new GitGraph({
+                delete that.state.gitGraph
+                that.state.gitGraph = new GitGraph({
                     template: myTemplate, // or blackarrow
                     orientation: "vertical",
                     author: "John Doe",
                     mode: "extended" // or compact if you don't want the messages
                 })
                 var branches = []
-                var master = gitgraph.branch("master");
+                var master = that.state.gitGraph.branch("master");
                 for (var i = json.length - 1; i >= 0; i--) {
                     if (true) { //check json[i] type
-                        that.commit(master, json[i])
+                        that.commit(master, json[i], i)
                     }
                 }
 
             }
         } else {
-            var gitgraph = new GitGraph({
+            delete that.state.gitGraph
+            that.state.gitGraph = new GitGraph({
                 template: myTemplate, // or blackarrow
                 orientation: "vertical",
                 author: "John Doe",
                 mode: "extended" // or compact if you don't want the messages
             });
-            var master = gitgraph.branch("master");
-            gitgraph.commit("My first commit"); // 1 commit upon HEAD
-            var develop = gitgraph.branch("develop"); // New branch from HEAD
+            var master = that.state.gitGraph.branch("master");
+            that.state.gitGraph.commit("My first commit"); // 1 commit upon HEAD
+            var develop = that.state.gitGraph.branch("develop"); // New branch from HEAD
             var myfeature = develop.branch("myfeature"); // New branch from develop
             develop.commit("Develop a feature - part 1");
             develop.commit("Develop a feature - part 2");
@@ -123,25 +137,36 @@ export default class version extends React.Component {
                 message: "Release of version 0.1",
                 tag: "0.1",
                 author: "John Releaser",
-                sha1: "abcdef0"
+                sha1: "abcdef0",
+                onClick: function (commit) {
+                    console.log(that.state.nodeAt)
+                    that.onNodeClick(commit)
+                }
             });
         }
     }
-    commit(branch, o) {
+    commit(branch, o, i) {
+        var that = this
+        var color = "white", clickFunc = () => {}
+        if(i == that.state.nodeAt){
+            color = "#34a853"
+        } else {
+            clickFunc = (commit) => {
+                that.onNodeClick(commit)
+            }
+        }
         branch.commit({
             lineWidth: 8,
             spacingX: 20,
             showLabel: true,
-            dotColor: "white",
+            dotColor: color,
             dotSize: 10,
             dotStrokeWidth: 10,
             sha1: o.short_id,
             message: o.title,
             author: o.author_name,
             // tag: "a-super-tag",
-            onClick: function (commit) {
-                console.log("Oh, you clicked my commit?!", commit);
-            }
+            onClick: clickFunc
         })
     }
 
@@ -155,7 +180,9 @@ export default class version extends React.Component {
         return (
             <div>
                 <h3> {this.props.ID }</h3>
-                <canvas id = "gitGraph" style = {{ width: '300px' }} > </canvas>                    
+                <div id="Div1" style={{ float: "left", height: "344px", overflowY:"scroll" }}>
+                <canvas id = "gitGraph" > </canvas>     
+                </div>               
             </div>
         )
     }

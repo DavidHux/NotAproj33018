@@ -30,7 +30,7 @@ export default class ListLogic extends React.Component {
         )
       })
       return(
-        <div className="list-group pre-scrollable">
+        <div className="list-group " style={{ height: "400px", width: "100%", overflowY:"scroll", }}>
           {list}
         </div>
       )

@@ -135,7 +135,9 @@ var data2 = [
     []
 ]
 var myChart = null
-var timeo = [95000, 160000, 180000, 195000, 220000]
+// var timeo = [95000, 160000, 180000, 195000, 220000]
+var timeo = [47000, 111000, 125000, 137000, 149000]
+
 // var timeo = [5000, 10000, 15000, 20000, 25000]
 
 export default class GraphLogic extends React.Component {
@@ -216,7 +218,7 @@ export default class GraphLogic extends React.Component {
                     type: 'graph',
                     layout: 'force',
                     force: {
-                        repulsion: 100
+                        repulsion: 300
                     },
                     // progressiveThreshold: 700,
                     data: json.nodes.map(that.modNode),
