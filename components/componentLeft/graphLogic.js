@@ -202,7 +202,8 @@ export default class GraphLogic extends React.Component {
         myChart = echarts.init(document.getElementById('myChart0'));
         //npm dependences graph http://echarts.baidu.com/demo.html#graph-npm
         myChart.showLoading();
-        $.getJSON('/data/asset/data/npmdepgraph.min10.json', function (json1) {
+        // $.getJSON('/data/asset/data/npmdepgraph.min10.json', 
+        // function (json1) {
             var json = fdata
             ServiceActions.updateService(json)
             myChart.hideLoading();
@@ -243,7 +244,7 @@ export default class GraphLogic extends React.Component {
                     // }
                 }]
             }, true);
-        });
+        // });
         myChart.on('click', this.eConsole)
         this.startPolling()
     }
