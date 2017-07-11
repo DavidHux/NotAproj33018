@@ -41,11 +41,11 @@ const Header = () => (
 )
 const ViewLogic = () => (
     <div>
-        <div className="col-md-8 col-sm-8 col-lg-8">
-        <GraphLogic />
-        </div>
         <div className="col-md-4 col-sm-4 col-lg-4">
         <ListLogic />
+        </div>
+        <div className="col-md-8 col-sm-8 col-lg-8">
+        <GraphLogic />
         </div>
     </div>
 )

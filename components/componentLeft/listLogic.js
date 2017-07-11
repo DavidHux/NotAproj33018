@@ -30,7 +30,7 @@ export default class ListLogic extends React.Component {
         )
       })
       return(
-        <div className="list-group " style={{ height: "400px", width: "100%", overflowY:"scroll", }}>
+        <div className="list-group " style={{ marginTop: "20px",height: "400px", width: "100%", overflowY:"scroll", }}>
           {list}
         </div>
       )
