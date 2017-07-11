@@ -2,3 +2,6 @@ node_modules/
 .webpack.config.js.swp
 package-lock.json
 bundle.js
+actions/ButtonActions.js
+components/__*
+stores/ListStore.js
