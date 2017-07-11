@@ -41,7 +41,11 @@ module.exports = {
         target: 'http://echarts.baidu.com',
         changeOrigin: true
       },
-      '/api/v4/projects/419/repository/commits': {
+      '/v2/apps/*': {
+        target: 'http://marathon.njuics.cn',
+        changeOrigin: true
+      },
+      '/api/v4/projects/*': {
         target: 'https://git.njuics.cn',
         changeOrigin: true
       }
