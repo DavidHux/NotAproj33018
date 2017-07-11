@@ -1,5 +1,11 @@
-#tooltips {
-    display:none;
-    text-decoration:none;
-    position:fixed;
-}
+.bs-example-tooltip .tooltip {
+   position: fixed;
+   display: none;
+   /*margin: 10px 20px;*/
+   top: 100px;
+   left: 100px;
+   opacity: 1;
+ }
+ .tooltip {
+     position: relative;;
+ }

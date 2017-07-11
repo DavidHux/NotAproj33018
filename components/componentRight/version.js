@@ -65,6 +65,7 @@ export default class version extends React.Component {
             gitGraph: null,
             previousID: null,
             nodeAt: 3,
+            deployingNode: -1,
             deploying: false,
             commits: [],
             btnon: false
@@ -78,24 +79,46 @@ export default class version extends React.Component {
         // console.log('remove element', element)
         // if(element != null) element.parentNode.removeChild(element)
     }
+    getCurrentVersion(callback){
+        $.ajax({
+            url: '/v2/apps/nap/ityphoon',
+            type: 'GET',
+            dataType: 'json',
+            success: processData,
+            error: function (e) {
+                console.log('get current version failed', e)
+            }
+            // beforeSend: setHeader
+        });
+        function processData(json){
+            var image = json.app.container.docker.image
+            var id = image.substring(image.lastIndexOf(":") + 1)
+            console.log('current version :', id)
+            callback(id)
+        }
+    }
+    computeNodeAt(id){
+        for(var i = 0;i < this.state.commits.length;i++){
+            if(this.state.commits[i].short_id == id){
+                return this.state.commits.length - 1 - i
+            }
+        }
+        return -1
+    }
     componentDidUpdate() {
         if (this.props.ID == 'version') return;
-        // this.state.previousID = this.props.ID
-        // if(this.state.gitGraph != null){
-        // this.state.gitGraph.canvas.removeEventListener("commit:click", this.onNodeClick);
-        // console.log(this.state.gitGraph.canvas)
-        // $("#gitGraph").unbind()
-        // console.log('remove listener')
-        // }
         
         console.log('update')
         var that = this
         var num = getarrindex(this.props.ID)
+        this.getCurrentVersion(processGraph)
 
+        function processGraph(id){
+            console.log('process graph: id', id)
         // if (this.state.num > 0) {
-            if (num == 0) {
+            // if (num == 0) {
                 $.ajax({
-                    url: '/api/v4/projects/419/repository/commits',
+                    url: '/api/v4/projects/431/repository/commits',
                     type: 'GET',
                     dataType: 'json',
                     success: processJSON,
@@ -104,10 +127,10 @@ export default class version extends React.Component {
                     },
                     beforeSend: setHeader
                 });
-            } else {
-                var datas = data[num - 1]
-                processJSON(datas)
-            }
+            // } else {
+            //     var datas = data[num - 1]
+            //     processJSON(datas)
+            // }
 
             function setHeader(xhr) {
                 xhr.setRequestHeader("PRIVATE-TOKEN", "czyDmRjcaEjmCVCHhZuy");
@@ -118,6 +141,11 @@ export default class version extends React.Component {
                 that.state.commits = json
                 if (json == null)
                     return
+                var nodeindex = that.computeNodeAt(id)
+                if(nodeindex == -1){
+                    console.log('compute node index -1', that.state.commits, id)
+                }
+                that.state.nodeAt = nodeindex
                 delete that.state.gitGraph
                 that.state.gitGraph = new GitGraph({
                     template: myTemplate, // or blackarrow
@@ -138,7 +166,7 @@ export default class version extends React.Component {
                 that.state.gitGraph.canvas.addEventListener("commit:mouseout", function(e){this.style.cursor = "auto";that.hidetooltip.bind(that)(e)})
                 // that.state.gitGraph.canvas.addEventListener("commit:mousemove", that.movetooltip.bind(that))                
             }
-        
+        }
     }
     computeIndex(hash){
         for(var i = 0;i < this.state.commits.length;i++){
@@ -148,17 +176,70 @@ export default class version extends React.Component {
         }
         return -1
     }
+    changeVersion(versionID){
+        $.ajax({
+                    url: 'https://git.njuics.cn/api/v4/projects/431/trigger/pipeline',
+                    type: 'POST',
+                    data: {
+                        token: "b6554b434c272d3077952ccdd2a134",
+                        ref: "master",
+                        "variables[SKIP_BUILD]": "true",
+                        "variables[CI_COMMIT_SHA]": versionID
+                    },
+                    // dataType: 'json',
+                    // success: processJSON,
+                    error: function (e) {
+                        console.log("change version failed", e)
+                    }
+                    // beforeSend: setHeader
+                }).done(function( msg ) {
+                    console.log('change version success:', msg)
+                });
+    }
 
     onNodeClick(param) {
         var i = this.computeIndex(param.sha1)
         if(i == -1) return
         if(i == this.state.nodeAt) return
+        if(i == this.state.deployingNode) return
+        if(this.state.deployingNode == true) return
 
+        var that = this
         var yp = -param.y / 50
-        this.setState({nodeAt : yp, deploying: true})
-        setTimeout(()=>{this.setState({ deploying : false})}, 3000)
-        // this.showbtn()
-        console.log('modified yp', param)
+        var id = this.state.commits[this.state.commits.length - 1 - yp].short_id
+        console.log('choose version ', id, yp, i)
+        this.changeVersion(id)
+        // this.changeVersion("7c5219e4")
+        this.state.deployingNode = yp
+        this.setState({ deploying: true})
+        // setTimeout(()=>{this.setState({ deploying : false, nodeAt : yp})}, 3000)
+        setTimeout(getResponse, 8000)
+        function getResponse(){
+            $.ajax({
+                type: 'GET',
+                url: '/v2/apps/nap/ityphoon',
+                dataType: 'json',
+                success: processData1,
+                error: function (e) {
+                    console.log('get current version failed', e)
+                }
+            // beforeSend: setHeader
+            });
+            function processData1(json){
+                var image = json.app.container.docker.image
+                var id = image.substring(image.lastIndexOf(":") + 1)
+                console.log("proccess callback", that.state.commits[that.state.commits.length - 1 - that.state.deployingNode].short_id, id)
+                if(that.state.commits[that.state.commits.length - 1 - that.state.deployingNode].short_id == id){
+                    if(json.app.deployments.length == 0){
+                        that.setState({deploying: false, nodeAt: that.state.deployingNode})
+                    } else {
+                        setTimeout(getResponse, 3000)
+                    }
+                } else {
+                    console.log('change version wrong', json)
+                }
+            }
+        }
     }
     showtooltip(e){
         var i = this.computeIndex(e.data.sha1)
@@ -167,11 +248,11 @@ export default class version extends React.Component {
         if(this.state.btnon == false){
             console.log('show tooltips ', e)
             this.state.btnon = true
-            $("#tooltips").css("display", "block")
+            $(".bs-example-tooltip .tooltip").css("display", "block")
             if(i < this.state.nodeAt){
-                $("#tooltips").text("rollback")
+                $(".tooltip-inner").text("click to roll back")
             } else {
-                $("#tooltips").text("update")
+                $(".tooltip-inner").text("click to update")
             }
         }
     }
@@ -179,7 +260,7 @@ export default class version extends React.Component {
         if(this.state.btnon == true){
             this.state.btnon = false
             console.log('hide tooltips', e)
-            $("#tooltips").css("display", "none")
+            $(".bs-example-tooltip .tooltip").css("display", "none")
             // global.window.style.cursor = "auto";
         }
     }
@@ -187,7 +268,7 @@ export default class version extends React.Component {
         if(this.state.btnon == false) return
         var x = e.clientX,
             y = e.clientY;
-        $("#tooltips").css({
+        $(".bs-example-tooltip .tooltip").css({
             top: y - 5,
             left: x + 15
         })
@@ -204,13 +285,11 @@ export default class version extends React.Component {
             color = "white",
             clickFunc = () => {}
         if (i == that.state.nodeAt) {
-            if(that.state.deploying == true){
-                color = "#fac21b"
-                tag = "Deploying"
-            } else {
-                color = "#34a853"
-                tag = "Running"
-            }
+            color = "#34a853"
+            tag = "Run"
+        } else if (i == that.state.deployingNode && that.state.deploying == true){
+            color = "#fac21b"
+            tag = "Deploy"
         } else {
             if(i < that.state.nodeAt){
                 color = "#749f83"
@@ -249,15 +328,18 @@ export default class version extends React.Component {
                 <div id="Div1" style={{ float: "left", height: "344px", overflowY:"scroll" }}>
                 <canvas id = {"gitGraph" + this.props.ID}  > </canvas>     
                 </div>
-                <span id='tooltips'>
+                {/*<span id='tooltips'>
                     &nbsp;&nbsp;tools
                      
-                </span>        
-                  {/*<div  id='tooltips' className="tooltip tooltip-right" role='tooltip'>
-                    <div id="aaaa" className="tooltip-inner">
-                        Tooltip on the right
+                </span>        */}
+                  <div id='tooltips' className="bs-example bs-example-tooltip">
+                    <div className="tooltip right" role="tooltip">
+                        <div className="tooltip-arrow"></div>
+                        <div className="tooltip-inner">
+                            Tooltip on the right
                         </div>
-                        </div> */}
+                    </div>
+                </div>
             </div>
         )
     }
