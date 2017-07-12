@@ -8,8 +8,27 @@ export default class ListLogic extends React.Component {
 
     this.state = {
       servicelist: [],
-      lastServiceList: []
+      lastServiceList: [],
+      deploying: false
     }
+    em.on('deployNode', function(id){
+            var that = this
+            this.state.deploying = true
+            var obj = $('#treeli'+id)
+            var coo = $('#treeli'+id).css('color')
+            changeColor(obj, "#fac21b", coo, coo)
+
+            function changeColor(obj, color1, color2, color3){
+                var colo = color1
+                if(that.state.deploying == false) colo = color3
+                obj.css('color', colo)
+                if(that.state.deploying == false) return
+                setTimeout(() => {changeColor(obj, color2, color1, color3)}, 500)
+            }
+        }.bind(this))
+        em.on('deployEnd', function(){
+            this.state.deploying = false
+        }.bind(this))
   }
   componentDidMount() {
     serviceStore.addServiceChangeListener(this._onChange.bind(this));
@@ -82,7 +101,7 @@ render() {
             color = "#fbbc05"
           }
         return (
-            <li key={k} style={{'color': color}}><a href={'/#/logicView/' + node.id}>{node.id}</a></li>
+            <li id={'treeLi' + node.id} key={k} style={{'color': color}}><a href={'/#/logicView/' + node.id}>{node.id}</a></li>
         )
       })
       return(

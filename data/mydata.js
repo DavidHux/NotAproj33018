@@ -3,6 +3,7 @@ var fdata = {
     "nodes": [{
             "id": "监控预警系统",
             "group": 1,
+            color: "#c23531",
             size: 20
         },
         {

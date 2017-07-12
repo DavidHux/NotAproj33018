@@ -143,6 +143,43 @@ var timeo = [53000, 64000, 14000, 23000, 12000]
 export default class GraphLogic extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {
+            dataNodes: [],
+            dataLinks: [],
+            deploying: false
+        }
+
+        em.on('deployNode', function(id){
+            var that = this
+            var index = findID(id)
+            // that.state.dataNodes[index].color = "#fac21b"
+            this.state.deploying = true
+            changeColor(index, "#fac21b", that.state.dataNodes[index].color, that.state.dataNodes[index].color)
+
+            function changeColor(index, color1, color2, color3){
+                that.state.dataNodes[index].color = color1
+                if(that.state.deploying == false) that.state.dataNodes[index].color = color3
+                myChart.setOption({
+                    series: [{
+                        data: that.state.dataNodes.map(that.modNode),
+                    }]
+                })
+                if(that.state.deploying == false) return
+                setTimeout(() => {changeColor(index, color2, color1, color3)}, 500)
+            }
+            function findID(id){
+                for(var i = 0;i < that.state.dataNodes.length;i++){
+                    if(that.state.dataNodes[i].id == id){
+                        return i
+                    }
+                }
+                console.log("id not find: " + id)
+                return -1
+            }
+        }.bind(this))
+        em.on('deployEnd', function(){
+            this.state.deploying = false
+        }.bind(this))
     }
     eConsole(param) {
         console.log(param)
@@ -182,6 +219,7 @@ export default class GraphLogic extends React.Component {
         function newdata() {
             var dataTnodes = fdata.nodes.concat(data1[timeoutindex])
             var dataTlinks = fdata.links.concat(data2[timeoutindex])
+            that.state.dataNodes = dataTnodes
             var newdd = {nodes: dataTnodes, links: dataTlinks}
             ServiceActions.updateService(newdd)
             console.log(dataTlinks, dataTnodes)
@@ -244,6 +282,7 @@ export default class GraphLogic extends React.Component {
                 }]
             }, true);
         });
+        this.state.dataNodes = fdata.nodes
         myChart.on('click', this.eConsole)
         this.startPolling()
     }

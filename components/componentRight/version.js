@@ -20,16 +20,16 @@ var list = [
     ["暴雨预警", "雷电预警", "暴雪预警"]
 ]
 
-function getarrindex(aaa) {
-    for (var i = 0; i < 3; i++) {
-        for (var j = 0; j < list[i].length; j++) {
-            if (list[i][j] == aaa) {
-                return i
-            }
-        }
-    }
-    return 3
-}
+// function getarrindex(aaa) {
+//     for (var i = 0; i < 3; i++) {
+//         for (var j = 0; j < list[i].length; j++) {
+//             if (list[i][j] == aaa) {
+//                 return i
+//             }
+//         }
+//     }
+//     return 3
+// }
 
 var myTemplateConfig = {
     colors: ["#979797", "#008fb5", "#f1c109"], // branches colors, 1 per column
@@ -74,12 +74,6 @@ export default class version extends React.Component {
         global.window.onmousemove = this.movetooltip.bind(this)
 
     }
-    componentWillUpdate() {
-        // if(this.state.previousID == null) return
-        // var element = document.getElementById("gitGraph"+ this.state.previousID);
-        // console.log('remove element', element)
-        // if(element != null) element.parentNode.removeChild(element)
-    }
     getCurrentVersion(callback) {
         $.ajax({
             url: '/v2/apps/nap/ityphoon',
@@ -113,13 +107,11 @@ export default class version extends React.Component {
 
         // console.log('update', this.props.ID)
         var that = this
-        var num = getarrindex(this.props.ID)
+        // var num = getarrindex(this.props.ID)
         this.getCurrentVersion(processGraph)
 
         function processGraph(id) {
             // console.log('process graph: id', id)
-            // if (this.state.num > 0) {
-            // if (num == 0) {
             $.ajax({
                 url: '/api/v4/projects/431/repository/commits',
                 type: 'GET',
@@ -130,10 +122,6 @@ export default class version extends React.Component {
                 },
                 beforeSend: setHeader
             });
-            // } else {
-            //     var datas = data[num - 1]
-            //     processJSON(datas)
-            // }
 
             function setHeader(xhr) {
                 xhr.setRequestHeader("PRIVATE-TOKEN", "czyDmRjcaEjmCVCHhZuy");
@@ -195,12 +183,9 @@ export default class version extends React.Component {
                 "variables[SKIP_BUILD]": "true",
                 "variables[CI_COMMIT_SHA]": versionID
             },
-            // dataType: 'json',
-            // success: processJSON,
             error: function (e) {
                 console.log("change version failed", e)
             }
-            // beforeSend: setHeader
         }).done(function (msg) {
             console.log('change version success:', msg)
         });
@@ -223,6 +208,7 @@ export default class version extends React.Component {
         this.setState({
             deploying: true
         })
+        em.emit("deployNode", this.props.ID)
         // setTimeout(()=>{this.setState({ deploying : false, nodeAt : yp})}, 3000)
         setTimeout(getResponse, 8000)
 
@@ -248,6 +234,7 @@ export default class version extends React.Component {
                             deploying: false,
                             nodeAt: that.state.deployingNode
                         })
+                        em.emit('deployEnd')
                     } else {
                         setTimeout(getResponse, 3000)
                     }
@@ -365,11 +352,8 @@ export default class version extends React.Component {
                 <div id="Div1" style={{ float: "left", height: "344px", overflowY:"scroll" }}>
                 <canvas id = {"gitGraph" + this.props.ID}   style={{marginTop: "-50px"}}> </canvas>     
                 </div>
-                {/*<span id='tooltips'>
-                    &nbsp;&nbsp;tools
-                     
-                </span>        */}
-                  <div id='tooltips' className="bs-example bs-example-tooltip">
+
+                <div id='tooltips' className="bs-example bs-example-tooltip">
                     <div className="tooltip right" role="tooltip">
                         <div className="tooltip-arrow"></div>
                         <div className="tooltip-inner">
