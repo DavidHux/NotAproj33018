@@ -88,12 +88,12 @@ var fdata = {
             "id": "暴雨预警",
             "group": 5,
             "color": "#6e7074"
-        },
-        {
-            "id": "暴雪预警",
-            "group": 5,
-            "color": "#6e7074"
         }
+        // {
+        //     "id": "暴雪预警",
+        //     "group": 5,
+        //     "color": "#6e7074"
+        // }
     ],
     "links": [{
             "source": "监控预警系统",
@@ -174,12 +174,12 @@ var fdata = {
             "source": "天气",
             "target": "暴雨预警",
             "value": 6
-        },
-        {
-            "source": "天气",
-            "target": "暴雪预警",
-            "value": 6
         }
+        // {
+        //     "source": "天气",
+        //     "target": "暴雪预警",
+        //     "value": 6
+        // }
     ]
 }
 module.exports = fdata

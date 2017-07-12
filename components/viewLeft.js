@@ -15,6 +15,7 @@ import GraphLogicD3 from './componentLeft/graphLogicD3'
 import GraphPhysics from './componentLeft/graphPhysics'
 import ListLogic from './componentLeft/listLogic'
 import ListPhysics from './componentLeft/listPhysics'
+import ListTreeLogic from './componentLeft/listTreeLogic'
 
 import ViewRight from './viewRight'
 
@@ -42,7 +43,7 @@ const Header = () => (
 const ViewLogic = () => (
     <div>
         <div className="col-md-4 col-sm-4 col-lg-4">
-        <ListLogic />
+        <ListTreeLogic />
         </div>
         <div className="col-md-8 col-sm-8 col-lg-8">
         <GraphLogic />

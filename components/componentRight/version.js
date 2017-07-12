@@ -68,7 +68,8 @@ export default class version extends React.Component {
             deployingNode: -1,
             deploying: false,
             commits: [],
-            btnon: false
+            btnon: false,
+            deployNodeColor: "#fac21b"
         }
         global.window.onmousemove = this.movetooltip.bind(this)
 
@@ -93,7 +94,7 @@ export default class version extends React.Component {
         function processData(json){
             var image = json.app.container.docker.image
             var id = image.substring(image.lastIndexOf(":") + 1)
-            console.log('current version :', id)
+            // console.log('current version :', id)
             callback(id)
         }
     }
@@ -108,13 +109,13 @@ export default class version extends React.Component {
     componentDidUpdate() {
         if (this.props.ID == 'version') return;
         
-        console.log('update')
+        // console.log('update')
         var that = this
         var num = getarrindex(this.props.ID)
         this.getCurrentVersion(processGraph)
 
         function processGraph(id){
-            console.log('process graph: id', id)
+            // console.log('process graph: id', id)
         // if (this.state.num > 0) {
             // if (num == 0) {
                 $.ajax({
@@ -228,7 +229,7 @@ export default class version extends React.Component {
             function processData1(json){
                 var image = json.app.container.docker.image
                 var id = image.substring(image.lastIndexOf(":") + 1)
-                console.log("proccess callback", that.state.commits[that.state.commits.length - 1 - that.state.deployingNode].short_id, id)
+                // console.log("proccess callback", that.state.commits[that.state.commits.length - 1 - that.state.deployingNode].short_id, id)
                 if(that.state.commits[that.state.commits.length - 1 - that.state.deployingNode].short_id == id){
                     if(json.app.deployments.length == 0){
                         that.setState({deploying: false, nodeAt: that.state.deployingNode})
@@ -240,13 +241,21 @@ export default class version extends React.Component {
                 }
             }
         }
+        setTimeout(() => {depNodeColor("#979797", "#fac21b")}, 500)
+        function depNodeColor(color1, color2){
+            that.setState({deployNodeColor: color1})
+            if(that.state.deploying == true){
+            // console.log("dep node color", color1, color2)
+                setTimeout(() => {depNodeColor(color2, color1)}, 500)
+            }
+        }
     }
     showtooltip(e){
         var i = this.computeIndex(e.data.sha1)
         if(i == -1) return
         if(i == this.state.nodeAt) return
         if(this.state.btnon == false){
-            console.log('show tooltips ', e)
+            // console.log('show tooltips ', e)
             this.state.btnon = true
             $(".bs-example-tooltip .tooltip").css("display", "block")
             if(i < this.state.nodeAt){
@@ -259,7 +268,7 @@ export default class version extends React.Component {
     hidetooltip(e){
         if(this.state.btnon == true){
             this.state.btnon = false
-            console.log('hide tooltips', e)
+            // console.log('hide tooltips', e)
             $(".bs-example-tooltip .tooltip").css("display", "none")
             // global.window.style.cursor = "auto";
         }
@@ -284,15 +293,15 @@ export default class version extends React.Component {
         var tag = '',
             color = "white",
             clickFunc = () => {}
-        if (i == that.state.nodeAt) {
-            color = "#34a853"
-            tag = "Run"
-        } else if (i == that.state.deployingNode && that.state.deploying == true){
-            color = "#fac21b"
+        if (i == that.state.deployingNode && that.state.deploying == true){
+            color = that.state.deployNodeColor
             tag = "Deploy"
+        } else if (i == that.state.nodeAt) {
+            color = "#34a853"
+            tag = "Running"
         } else {
             if(i < that.state.nodeAt){
-                color = "#749f83"
+                color = "#979797"
             } else {
                 color = "#008fb5"
             }
@@ -311,6 +320,8 @@ export default class version extends React.Component {
             message: o.title,
             author: o.author_name,
             tag: tag,
+            tagColor: color,
+            displayTagBox: false,
             onClick: clickFunc
         })
     }
@@ -326,7 +337,7 @@ export default class version extends React.Component {
             <div>
                 <h3> {this.props.ID }</h3>
                 <div id="Div1" style={{ float: "left", height: "344px", overflowY:"scroll" }}>
-                <canvas id = {"gitGraph" + this.props.ID}  > </canvas>     
+                <canvas id = {"gitGraph" + this.props.ID}   style={{marginTop: "-50px"}}> </canvas>     
                 </div>
                 {/*<span id='tooltips'>
                     &nbsp;&nbsp;tools
