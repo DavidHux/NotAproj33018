@@ -1,6 +1,8 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import echarts from 'echarts'
+import myTemplate from "../others/myGitGraphTemplate"
+import versionStore from "../../stores/versionStore"
 // import '../../css/tooltip.css'
 
 // const GraphLogic = () => (
@@ -20,44 +22,6 @@ var list = [
     ["暴雨预警", "雷电预警", "暴雪预警"]
 ]
 
-// function getarrindex(aaa) {
-//     for (var i = 0; i < 3; i++) {
-//         for (var j = 0; j < list[i].length; j++) {
-//             if (list[i][j] == aaa) {
-//                 return i
-//             }
-//         }
-//     }
-//     return 3
-// }
-
-var myTemplateConfig = {
-    colors: ["#979797", "#008fb5", "#f1c109"], // branches colors, 1 per column
-    branch: {
-        lineWidth: 8,
-        spacingX: 20,
-        showLabel: false, // display branch names on graph
-    },
-    commit: {
-        spacingY: -50,
-        dot: {
-            size: 12
-        },
-        message: {
-            displayAuthor: true,
-            displayBranch: true,
-            displayHash: true,
-            font: "normal 12pt Arial"
-        },
-        shouldDisplayTooltipsInCompactMode: false, // default = true
-        tooltipHTMLFormatter: function (commit) {
-            return "" + commit.sha1 + "" + ": " + commit.message;
-        }
-    }
-};
-var myTemplate = new GitGraph.Template(myTemplateConfig);
-
-
 export default class version extends React.Component {
     constructor(props) {
         super(props)
@@ -69,87 +33,57 @@ export default class version extends React.Component {
             deploying: false,
             commits: [],
             btnon: false,
-            deployNodeColor: "#fac21b"
+            deployNodeColor: "#fac21b",
+            serviceName: "监控预警系统"
         }
         global.window.onmousemove = this.movetooltip.bind(this)
+        em.on('changeservice', function(name){
+            this.setState({serviceName: name})
+        }.bind(this))
 
     }
-    getCurrentVersion(callback) {
-        $.ajax({
-            url: '/v2/apps/nap/ityphoon',
-            type: 'GET',
-            dataType: 'json',
-            success: processData,
-            error: function (e) {
-                console.log('get current version failed', e)
-            }
-            // beforeSend: setHeader
-        });
+    
 
-        function processData(json) {
-            var image = json.app.container.docker.image
-            var id = image.substring(image.lastIndexOf(":") + 1)
-            // console.log('current version :', id)
-            callback(id)
-        }
+    componentDidMount() {
+        // if (this.state.serviceName == 'version') return;   
+        // console.log('mount')
+        this.componentDidUpdate()
     }
-    computeNodeAt(id) {
-        for (var i = 0; i < this.state.commits.length; i++) {
-            if (this.state.commits[i].short_id == id) {
-                return this.state.commits.length - 1 - i
-            }
-        }
-        return -1
-    }
+
     componentDidUpdate() {
-        var IDlast = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
-        if (IDlast == 'version') return;
+        // var IDlast = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
+        // if (IDlast == 'version') return;
 
-        // console.log('update', this.props.ID)
+        console.log('update', this.state.serviceName)
         var that = this
-        // var num = getarrindex(this.props.ID)
-        this.getCurrentVersion(processGraph)
+        versionStore.getCurrentVersion(processGraph)
 
         function processGraph(id) {
-            // console.log('process graph: id', id)
-            $.ajax({
-                url: '/api/v4/projects/431/repository/commits',
-                type: 'GET',
-                dataType: 'json',
-                success: processJSON,
-                error: function (e) {
-                    console.log(e), alert('boo!');
-                },
-                beforeSend: setHeader
-            });
-
-            function setHeader(xhr) {
-                xhr.setRequestHeader("PRIVATE-TOKEN", "czyDmRjcaEjmCVCHhZuy");
-            }
+            versionStore.getCurrentCommits(processJSON)
 
             function processJSON(json) {
                 // console.log(json)
                 that.state.commits = json
                 if (json == null)
                     return
-                var nodeindex = that.computeNodeAt(id)
+                var nodeindex = versionStore.getCurrentNodeAt()
                 if (nodeindex == -1) {
                     console.log('compute node index -1', that.state.commits, id)
                 }
                 that.state.nodeAt = nodeindex
                 delete that.state.gitGraph
                 that.state.gitGraph = new GitGraph({
-                    template: myTemplate, // or blackarrow
+                    template: myTemplate.template, // or blackarrow
                     orientation: "vertical-reverse",
                     author: "John Doe",
-                    elementId: "gitGraph" + that.props.ID,
+                    elementId: "gitGraph" + that.state.serviceName,
                     mode: "extended" // or compact if you don't want the messages
                 })
                 var branches = []
                 var master = that.state.gitGraph.branch("master");
                 for (var i = json.length - 1; i >= 0; i--) {
                     if (true) { //check json[i] type
-                        that.commit(master, json[i], json.length - 1 - i)
+                        myTemplate.commit(master, json[i], json.length - 1 - i, that)
                     }
                 }
 
@@ -161,7 +95,6 @@ export default class version extends React.Component {
                     this.style.cursor = "auto";
                     that.hidetooltip.bind(that)(e)
                 })
-                // that.state.gitGraph.canvas.addEventListener("commit:mousemove", that.movetooltip.bind(that))                
             }
         }
     }
@@ -172,24 +105,7 @@ export default class version extends React.Component {
             }
         }
         return -1
-    }
-    changeVersion(versionID) {
-        $.ajax({
-            url: 'https://git.njuics.cn/api/v4/projects/431/trigger/pipeline',
-            type: 'POST',
-            data: {
-                token: "b6554b434c272d3077952ccdd2a134",
-                ref: "master",
-                "variables[SKIP_BUILD]": "true",
-                "variables[CI_COMMIT_SHA]": versionID
-            },
-            error: function (e) {
-                console.log("change version failed", e)
-            }
-        }).done(function (msg) {
-            console.log('change version success:', msg)
-        });
-    }
+    }  
 
     onNodeClick(param) {
         var i = this.computeIndex(param.sha1)
@@ -202,13 +118,13 @@ export default class version extends React.Component {
         var yp = -param.y / 50
         var id = this.state.commits[this.state.commits.length - 1 - yp].short_id
         console.log('choose version ', id, yp, i)
-        this.changeVersion(id)
-        // this.changeVersion("7c5219e4")
+        versionStore.changeVersion(id)
         this.state.deployingNode = yp
         this.setState({
             deploying: true
         })
-        em.emit("deployNode", this.props.ID)
+        em.emit("deployNode", this.state.serviceName)
+        versionStore.emitMessage("service " + this.state.serviceName + "is deploying version: " + id)
         // setTimeout(()=>{this.setState({ deploying : false, nodeAt : yp})}, 3000)
         setTimeout(getResponse, 8000)
 
@@ -235,6 +151,7 @@ export default class version extends React.Component {
                             nodeAt: that.state.deployingNode
                         })
                         em.emit('deployEnd')
+                        versionStore.emitMessage("service " + that.state.serviceName + "deployment finished.")
                     } else {
                         setTimeout(getResponse, 3000)
                     }
@@ -296,61 +213,27 @@ export default class version extends React.Component {
         // console.log('mouse move', e)
     }
 
-    componentDidMount() {
-        // if (this.props.ID == 'version') return;   
-        // console.log('mount')
-        this.componentDidUpdate()
-    }
-    commit(branch, o, i) {
-        var that = this
-        var tag = '',
-            color = "white",
-            clickFunc = () => {}
-        if (i == that.state.deployingNode && that.state.deploying == true) {
-            color = that.state.deployNodeColor
-            tag = "Deploy"
-        } else if (i == that.state.nodeAt) {
-            color = "#34a853"
-            tag = "Running"
-        } else {
-            if (i < that.state.nodeAt) {
-                color = "#979797"
-            } else {
-                color = "#008fb5"
-            }
-            clickFunc = (commit) => {
-                that.onNodeClick(commit)
-            }
-        }
-        branch.commit({
-            lineWidth: 8,
-            spacingX: 20,
-            showLabel: true,
-            dotColor: color,
-            dotSize: 10,
-            dotStrokeWidth: 10,
-            sha1: o.short_id,
-            message: o.title,
-            author: o.author_name,
-            tag: tag,
-            tagColor: color,
-            displayTagBox: false,
-            onClick: clickFunc
-        })
-    }
-
     render() {
-        // console.log('ppp;', this.props.ID)
-        if (this.props.ID == 'version') {
-            return ( 
-                <h3> select a node </h3>
-            )
-        }
+        // console.log('ppp;', this.state.serviceName)
+        // if (this.state.serviceName == 'version') {
+        //     return ( 
+        //         <h3> select a node </h3>
+        //     )
+        // }
+        // var index = window.location.href.lastIndexOf('/')
+        // if(index != -1){
+        //     var a = window.location.href.substring(index + 1)
+        // }
+        // console.log('windeow', a, window.location.href)
+        // if(a == 'version' || a.length == 0){
+        //     a = "监控预警系统"
+        // }
+        // this.state.serviceName = a
         return (
             <div>
-                <h3> {this.props.ID }</h3>
-                <div id="Div1" style={{ float: "left", height: "344px", overflowY:"scroll" }}>
-                <canvas id = {"gitGraph" + this.props.ID}   style={{marginTop: "-50px"}}> </canvas>     
+                <h4 style={{color: '#369'}}> &nbsp;&nbsp;&nbsp;  {'    ' + this.state.serviceName}</h4>
+                <div id="Div1" style={{ float: "left",  width: '100%', height: '75%', overflow:"scroll" }}>
+                    <canvas id = {"gitGraph" + this.state.serviceName}   style={{marginTop: "-30px"}}> </canvas>     
                 </div>
 
                 <div id='tooltips' className="bs-example bs-example-tooltip">

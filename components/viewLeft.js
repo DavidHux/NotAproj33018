@@ -62,12 +62,12 @@ export default class viewLeft extends React.Component {
 
     render() {
         return (
-            <div className="col-md-8 col-sm-8 col-lg-8">
-                <Header />
-                <Redirect from='/' to='/logicView/version' />
-                {/*<Redirect from='/physicsView' to='/physicsView/version' />*/}
-                <Route path='/logicView' component={ViewLogic} />
-                <Route path='/physicsView' component={ViewPhysics} />
+            <div className="col-md-7 col-sm-7 col-lg-7">
+                {/* <Header /> */}
+                {/* <Redirect from='/' to='/logicView/version' /> */}
+                {/* <Route path='/logicView' component={ViewLogic} /> */}
+                {/* <Route path='/physicsView' component={ViewPhysics} /> */}
+                <ViewLogic />
             </div>
         )
     }

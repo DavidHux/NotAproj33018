@@ -154,6 +154,7 @@ export default class GraphLogic extends React.Component {
             var index = findID(id)
             // that.state.dataNodes[index].color = "#fac21b"
             this.state.deploying = true
+            console.log(that.state.dataNodes, id, index)
             changeColor(index, "#fac21b", that.state.dataNodes[index].color, that.state.dataNodes[index].color)
 
             function changeColor(index, color1, color2, color3){
@@ -184,7 +185,8 @@ export default class GraphLogic extends React.Component {
     eConsole(param) {
         console.log(param)
         if (param.dataType == 'node') {
-            window.location.href = '/#/logicView/' + param.name
+            // window.location.href = 'http://localhost:8080/#/logicView/' + param.name
+            em.emit('changeservice', param.name)
         }
     }
 
@@ -290,7 +292,7 @@ export default class GraphLogic extends React.Component {
     render() {
         return (
             <div >
-                <div id="myChart0" style={{ "width": "100%", "height": "400px"}}></div>
+                <div id="myChart0" style={{ "width": "100%", "height": "380px"}}></div>
             </div>
         )
     }

@@ -9,8 +9,12 @@ export default class ListLogic extends React.Component {
     this.state = {
       servicelist: [],
       lastServiceList: [],
-      deploying: false
+      deploying: false,
+      serviceName: '监控预警系统'
     }
+    em.on('changeservice', function(name){
+        this.setState({serviceName: name})
+    }.bind(this))
     em.on('deployNode', function(id){
             var that = this
             this.state.deploying = true
@@ -95,20 +99,20 @@ render() {
     if(this.state.servicelist != []){
       var list = this.state.servicelist.map((node, k) => {
             var color = "#369"
-          if(node.id == window.location.href.substring(window.location.href.lastIndexOf("/") + 1)){
+          if(node.id == this.state.serviceName){
               color = "#ea4335"
           } else if(this.getLastIndex(node.id) == -1){
             color = "#fbbc05"
           }
         return (
-            <li id={'treeLi' + node.id} key={k} style={{'color': color}}><a href={'/#/logicView/' + node.id}>{node.id}</a></li>
+            <li id={'treeLi' + node.id} key={k} style={{'color': color}} onClick={()=>{em.emit('changeservice', node.id)}}><a href='javascript:void(0)'>{node.id}</a></li>
         )
       })
       return(
-        <div style={{overflow: "hidden", width: "200px"}}>
-        <div className="panel-body" style={{ height: "500px", width: "215px", overflowY:"scroll" }}>
+        <div style={{overflow: "hidden", width: "250px"}}>
+        <div className="panel-body" style={{  width: "265px", overflowY:"scroll" }}>
             <ul className="treeview">
-                <li><a href="javascript:void(0);">Branch</a></li>
+                <li><a href="javascript:void(0);">南京防汛防台风应急响应</a></li>
                 <ul>
                     {list}
             	</ul>

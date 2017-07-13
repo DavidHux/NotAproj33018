@@ -17,8 +17,8 @@ window.$ = window.jQuery = $;
 window.em = em
 
 ReactDOM.render(
-  <HashRouter>
-    <Mainframe />  
-  </HashRouter>,
+  // <HashRouter>
+    <Mainframe />,  
+  // /* </HashRouter>, */
   document.querySelector('#example')
 );

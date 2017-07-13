@@ -38,22 +38,23 @@ const ViewSoftwareDefine = () => (
 export default class viewRight extends React.Component {
     constructor(props){
         super(props)
-        id = props.match.params.id
+        // id = props.match.params.id
     }
 
     render() {
         var match = this.props.match
         // console.log(match.params.id)
         return (
-            <div className="col-md-4 col-sm-4 col-lg-4 ">
-                <Header match={match}/>
+            <div className="col-md-5 col-sm-5 col-lg-5 ">
+                {/* <Header match={match}/>
                 <Switch>
                     <Route path={`${match.url}/softwareDefine`} component={ViewSoftwareDefine}/>
                     <Route path={`${match.url}/measure`} component={ViewSoftwareDefine}/>                    
                     <Route exact path={match.url} >
                         <Version ID={match.params.id} />
                     </Route>
-                </Switch>
+                </Switch> */}
+                <Version />
             </div>
         )
         // col-md-10 col-md-offset-2 main infoPanel
