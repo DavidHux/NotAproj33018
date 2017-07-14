@@ -34,17 +34,17 @@ import ViewRight from './viewRight'
 //             <Route path='/logicView/:id' component={ViewRight} />
 //             <Route path='/physicsView/:id' component={ViewRight} />
 //     // </div>
-//         </div> */}
+//         </div> */}  className="panel panel-primary" style={{height: '100%', marginTop: "0", marginBottom: '0'}}
 const mainframe = () => (
         
-        <div className="panel panel-primary" style={{height: '100%', marginTop: "0", marginBottom: '0'}}>
-            <div className="panel-heading">
+        <div >
+            {/* <div className="panel-heading">
                 <h3 className="panel-title">iNAP</h3>
-            </div>
-            <div className="panel-body">
+            </div> */}
+            {/* <div className="panel-body"> */}
                 <ViewLeft />
                 <ViewRight />
-            </div>
+            {/* </div> */}
         </div>
 )
 export default mainframe

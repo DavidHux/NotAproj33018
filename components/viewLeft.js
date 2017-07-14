@@ -42,11 +42,15 @@ const Header = () => (
 )
 const ViewLogic = () => (
     <div>
-        <div className="col-md-4 col-sm-4 col-lg-4">
-        <ListTreeLogic />
+        <div className="col-md-2 col-sm-2 col-lg-2">
+            <div className="panel panel-default" style={{height: '100%', marginTop: "0", marginBottom: '0'}}>
+            <ListTreeLogic />
+            </div>
         </div>
-        <div className="col-md-8 col-sm-8 col-lg-8">
+        <div className="col-md-5 col-sm-5 col-lg-5">
+            <div className="panel panel-default" style={{height: '100%', marginTop: "0", marginBottom: '0'}}>            
         <GraphLogic />
+        </div>
         </div>
     </div>
 )
@@ -62,8 +66,8 @@ export default class viewLeft extends React.Component {
 
     render() {
         return (
-            <div className="col-md-7 col-sm-7 col-lg-7">
-                {/* <Header /> */}
+            <div >
+                {/* <Header /> className="col-md-7 col-sm-7 col-lg-7" */ }
                 {/* <Redirect from='/' to='/logicView/version' /> */}
                 {/* <Route path='/logicView' component={ViewLogic} /> */}
                 {/* <Route path='/physicsView' component={ViewPhysics} /> */}

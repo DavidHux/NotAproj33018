@@ -291,7 +291,7 @@ export default class GraphLogic extends React.Component {
 
     render() {
         return (
-            <div >
+            <div style={{overflow: "hidden", width: "100%", height: "100%"}}>
                 <div id="myChart0" style={{ "width": "100%", "height": "380px"}}></div>
             </div>
         )

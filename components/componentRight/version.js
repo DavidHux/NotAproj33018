@@ -231,9 +231,13 @@ export default class version extends React.Component {
         // this.state.serviceName = a
         return (
             <div>
-                <h4 style={{color: '#369'}}> &nbsp;&nbsp;&nbsp;  {'    ' + this.state.serviceName}</h4>
-                <div id="Div1" style={{ float: "left",  width: '100%', height: '75%', overflow:"scroll" }}>
-                    <canvas id = {"gitGraph" + this.state.serviceName}   style={{marginTop: "-30px"}}> </canvas>     
+                 <h4 style={{color: '#369', fontSize: '14px', marginBottom: '-5px', marginTop: '0', marginLeft: '18px'}}> &nbsp;&nbsp;&nbsp;  {'    ' + this.state.serviceName}</h4> 
+                 <div>
+                <div style={{overflow: "hidden", width: "100%", height: "100%"}}>
+                <div id="Div1" style={{ float: "left",  width: '105%', height: "105%", overflow:"scroll" }}>
+                    <canvas id = {"gitGraph" + this.state.serviceName}  style={{marginTop: "-30px"}}> </canvas>     
+                </div>
+                </div>
                 </div>
 
                 <div id='tooltips' className="bs-example bs-example-tooltip">

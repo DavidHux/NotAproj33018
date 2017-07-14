@@ -54,7 +54,9 @@ export default class viewRight extends React.Component {
                         <Version ID={match.params.id} />
                     </Route>
                 </Switch> */}
+                <div className="panel panel-default" style={{height: '100%', marginTop: "0", marginBottom: '0', paddingTop: '20px'}}>
                 <Version />
+                </div>
             </div>
         )
         // col-md-10 col-md-offset-2 main infoPanel

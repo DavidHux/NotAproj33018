@@ -6,7 +6,7 @@ var myTemplateConfig = {
         showLabel: false, // display branch names on graph
     },
     commit: {
-        spacingY: -50,
+        spacingY: -45,
         dot: {
             size:12
         },
@@ -48,7 +48,7 @@ function commit(branch, o, i, that) {
         spacingX: 20,
         showLabel: true,
         dotColor: color,
-        dotSize: 8,
+        dotSize: 6,
         dotStrokeWidth: 10,
         sha1: o.short_id,
         message: o.title,
