@@ -62,7 +62,7 @@ export default class version extends React.Component {
             versionStore.getCurrentCommits(processJSON)
 
             function processJSON(json) {
-                // console.log(json)
+                // console.log("process json", json)
                 that.state.commits = json
                 if (json == null)
                     return
@@ -115,7 +115,8 @@ export default class version extends React.Component {
         if (this.state.deploying == true) return
 
         var that = this
-        var yp = -param.y / 50
+        
+        var yp = param.y / myTemplate.config.commit.spacingY
         var id = this.state.commits[this.state.commits.length - 1 - yp].short_id
         console.log('choose version ', id, yp, i)
         versionStore.changeVersion(id)

@@ -63,7 +63,8 @@ var template = new GitGraph.Template(myTemplateConfig);
 
 var myTemplate = {
     template: template,
-    commit: commit
+    commit: commit,
+    config: myTemplateConfig
 }
 
 export default myTemplate
