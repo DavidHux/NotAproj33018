@@ -125,7 +125,7 @@ export default class version extends React.Component {
             deploying: true
         })
         em.emit("deployNode", this.state.serviceName)
-        versionStore.emitMessage("service " + this.state.serviceName + "is deploying version: " + id)
+        versionStore.emitMessage(this.state.serviceName + "服务开始部署版本：" + id)
         // setTimeout(()=>{this.setState({ deploying : false, nodeAt : yp})}, 3000)
         setTimeout(getResponse, 8000)
 
@@ -152,7 +152,7 @@ export default class version extends React.Component {
                             nodeAt: that.state.deployingNode
                         })
                         em.emit('deployEnd')
-                        versionStore.emitMessage("service " + that.state.serviceName + "deployment finished.")
+                        versionStore.emitMessage(that.state.serviceName  + "服务版本部署完毕")
                     } else {
                         setTimeout(getResponse, 3000)
                     }

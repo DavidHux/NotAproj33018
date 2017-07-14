@@ -101,7 +101,7 @@ class VersionStore extends EventEmitter {
 
     emitMessage(msg){
         $.ajax({
-            url: 'https://demo.njuics.cn/',
+            url: 'http://demo.njuics.cn/message',
             type: 'get',
             data: {
                 message: "inap__" + msg

@@ -4,6 +4,7 @@ import echarts from 'echarts'
 
 import serviceStore from '../../stores/serviceStore'
 import ServiceActions from '../../actions/ServiceActions'
+import versionStore from '../../stores/versionStore'
 var fdata = require('../../data/mydata')
 
 var addindex = 0
@@ -221,6 +222,11 @@ export default class GraphLogic extends React.Component {
         function newdata() {
             var dataTnodes = fdata.nodes.concat(data1[timeoutindex])
             var dataTlinks = fdata.links.concat(data2[timeoutindex])
+            var aaa = ''
+            for(var i = 0;i < data1[timeoutindex].length;i++){
+                aaa += data1[timeoutindex][i].id+' '
+            }
+            versionStore.emitMessage('服务依赖发生变化 ' + aaa)
             that.state.dataNodes = dataTnodes
             var newdd = {nodes: dataTnodes, links: dataTlinks}
             ServiceActions.updateService(newdd)
