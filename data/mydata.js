@@ -183,4 +183,135 @@ var fdata = {
         // }
     ]
 }
-module.exports = fdata
+var data1 = [
+    [{
+            "id": "广东水文",
+            "group": 3,
+            "color": "#d48265"
+        },
+        {
+            "id": "福建水文",
+            "group": 3,
+            "color": "#d48265"
+        }
+    ],
+
+    [{
+            "id": "江西水文",
+            "group": 3,
+            "color": "#d48265"
+        },
+        {
+            "id": "福建水文",
+            "group": 3,
+            "color": "#d48265"
+        }
+
+    ],
+    [{
+            "id": "浙江水文",
+            "group": 3,
+            "color": "#d48265"
+        },
+        {
+            "id": "江西水文",
+            "group": 3,
+            "color": "#d48265"
+        },
+        {
+            "id": "安徽水文",
+            "group": 3,
+            "color": "#d48265"
+        }
+    ],
+    [{
+            "id": "浙江水文",
+            "group": 3,
+            "color": "#d48265"
+        },
+        {
+            "id": "安徽水文",
+            "group": 3,
+            "color": "#d48265"
+        },
+        {
+            "id": "江苏水文",
+            "group": 3,
+            "color": "#d48265"
+        },
+        {
+            "id": "上海水文",
+            "group": 3,
+            "color": "#d48265"
+        }
+    ],
+    []
+]
+var data2 = [
+    [{
+            "source": "水文",
+            "target": "广东水文",
+            "value": 6
+        },
+        {
+            "source": "水文",
+            "target": "福建水文",
+            "value": 6
+        }
+    ],
+    [{
+            "source": "水文",
+            "target": "江西水文",
+            "value": 6
+        },
+        {
+            "source": "水文",
+            "target": "福建水文",
+            "value": 6
+        }
+    ],
+    [{
+            "source": "水文",
+            "target": "浙江水文",
+            "value": 6
+        },
+        {
+            "source": "水文",
+            "target": "安徽水文",
+            "value": 6
+        },
+        {
+            "source": "水文",
+            "target": "江西水文",
+            "value": 6
+        },
+    ],
+    [{
+            "source": "水文",
+            "target": "浙江水文",
+            "value": 6
+        },
+        {
+            "source": "水文",
+            "target": "安徽水文",
+            "value": 6
+        },
+
+        {
+            "source": "水文",
+            "target": "江苏水文",
+            "value": 6
+        },
+        {
+            "source": "水文",
+            "target": "上海水文",
+            "value": 6
+        }
+    ],
+    []
+]
+// var timeo = [95000, 160000, 180000, 195000, 220000]
+var timeo = [53000, 64000, 14000, 23000, 12000]
+
+// var timeo = [5000, 10000, 15000, 20000, 25000]
+module.exports = {fdata, data1, data2, timeo}

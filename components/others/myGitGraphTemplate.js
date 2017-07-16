@@ -48,7 +48,7 @@ function commit(branch, o, i, that) {
         spacingX: 20,
         showLabel: true,
         dotColor: color,
-        dotSize: 6,
+        dotSize: 5,
         dotStrokeWidth: 10,
         sha1: o.short_id,
         message: o.title,

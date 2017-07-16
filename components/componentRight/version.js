@@ -3,6 +3,7 @@ import ReactDOM from "react-dom"
 import echarts from 'echarts'
 import myTemplate from "../others/myGitGraphTemplate"
 import versionStore from "../../stores/versionStore"
+import serviceStore from "../../stores/serviceStore"
 // import '../../css/tooltip.css'
 
 // const GraphLogic = () => (
@@ -21,6 +22,7 @@ var list = [
     ["水文", "天气", "台风", "信息发布"],
     ["暴雨预警", "雷电预警", "暴雪预警"]
 ]
+var myChart = null
 
 export default class version extends React.Component {
     constructor(props) {
@@ -34,11 +36,12 @@ export default class version extends React.Component {
             commits: [],
             btnon: false,
             deployNodeColor: "#fac21b",
-            serviceName: "监控预警系统"
+            serviceName: "监控预警系统",
+            lastName: 'last'
         }
         global.window.onmousemove = this.movetooltip.bind(this)
-        em.on('changeservice', function(name){
-            this.setState({serviceName: name})
+        em.once('firstgetservice', function(){
+            this.setState({nodeAt: 4})
         }.bind(this))
 
     }
@@ -47,21 +50,47 @@ export default class version extends React.Component {
     componentDidMount() {
         // if (this.state.serviceName == 'version') return;   
         // console.log('mount')
+        myChart = echarts.init(document.getElementById('myChart1'));
+        myChart.showLoading();
+        versionStore.addServiceChangeListener(this._onVersionServiceChange.bind(this));
         this.componentDidUpdate()
     }
 
+    componentWillUnmount() {
+        versionStore.removeServiceChangeListener(this._onVersionServiceChange.bind(this))
+        this.state.deploying = false
+    }
+    _onVersionServiceChange() {
+        // this.state.lastServiceList = this.state.servicelist
+        this.setState({ serviceName: versionStore.getCurrentServiceName()})
+    }
     componentDidUpdate() {
         // var IDlast = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
         // if (IDlast == 'version') return;
+        if(this.state.serviceName != this.state.lastName){
+            $('#notexist').css('display', 'none')            
+            $("#gitGraph").css('display', 'none')
+            $('#show').css('display', 'block')
+        }
 
-        console.log('update', this.state.serviceName)
+        // console.log('update', this.state.serviceName)
         var that = this
         versionStore.getCurrentVersion(processGraph)
 
         function processGraph(id) {
-            versionStore.getCurrentCommits(processJSON)
-
-            function processJSON(json) {
+            // console.log('get current version call back:', id)
+            if(id == -1 || id == -2){
+                // $('#servicename').text('App '+ that.state.serviceName + ' does not exist')
+                console.log('App '+ that.state.serviceName + ' does not exist')
+                if (that.state.serviceName != that.state.lastName) {
+                    // $("#gitGraph").css('display', 'none')
+                    $('#show').css('display', 'none')
+                    $('#notexist').css('display', 'block')
+                }
+                return
+            }
+            versionStore.getCurrentCommits(ppp)
+            function ppp(json){
                 // console.log("process json", json)
                 that.state.commits = json
                 if (json == null)
@@ -76,7 +105,7 @@ export default class version extends React.Component {
                     template: myTemplate.template, // or blackarrow
                     orientation: "vertical-reverse",
                     author: "John Doe",
-                    elementId: "gitGraph" + that.state.serviceName,
+                    // elementId: "gitGraph" + that.state.serviceName,
                     mode: "extended" // or compact if you don't want the messages
                 })
                 var branches = []
@@ -85,6 +114,11 @@ export default class version extends React.Component {
                     if (true) { //check json[i] type
                         myTemplate.commit(master, json[i], json.length - 1 - i, that)
                     }
+                }
+                if (that.state.serviceName != that.state.lastName) {
+                    $('#show').css('display', 'none')
+                    $("#gitGraph").css('display', 'block')
+                    that.state.lastName = that.state.serviceName
                 }
 
                 that.state.gitGraph.canvas.addEventListener("commit:mouseover", function (e) {
@@ -127,12 +161,16 @@ export default class version extends React.Component {
         em.emit("deployNode", this.state.serviceName)
         versionStore.emitMessage(this.state.serviceName + "服务开始部署版本：" + id)
         // setTimeout(()=>{this.setState({ deploying : false, nodeAt : yp})}, 3000)
-        setTimeout(getResponse, 8000)
+        var sss = that.state.serviceName + ''
+        // console.log('sss',sss)
+        setTimeout(()=>{getResponse(sss)}, 10000)
 
-        function getResponse() {
+        function getResponse(serviceName) {
+            console.log('check service, servicename', serviceName)
+            var url = serviceStore.getServiceUrl(serviceName)
             $.ajax({
                 type: 'GET',
-                url: '/v2/apps/nap/ityphoon',
+                url: '/v2/apps/nap/' + url,
                 dataType: 'json',
                 success: processData1,
                 error: function (e) {
@@ -142,6 +180,7 @@ export default class version extends React.Component {
             });
 
             function processData1(json) {
+                // console.log(json)
                 var image = json.app.container.docker.image
                 var id = image.substring(image.lastIndexOf(":") + 1)
                 // console.log("proccess callback", that.state.commits[that.state.commits.length - 1 - that.state.deployingNode].short_id, id)
@@ -154,7 +193,7 @@ export default class version extends React.Component {
                         em.emit('deployEnd')
                         versionStore.emitMessage(that.state.serviceName  + "服务版本部署完毕")
                     } else {
-                        setTimeout(getResponse, 3000)
+                        setTimeout(()=>{getResponse(serviceName)}, 3000)
                     }
                 } else {
                     console.log('change version wrong', json)
@@ -176,9 +215,6 @@ export default class version extends React.Component {
                 }, 500)
             }
         }
-    }
-    componentWillUnmount() {
-        this.state.deploying = false
     }
     showtooltip(e) {
         var i = this.computeIndex(e.data.sha1)
@@ -216,27 +252,17 @@ export default class version extends React.Component {
 
     render() {
         // console.log('ppp;', this.state.serviceName)
-        // if (this.state.serviceName == 'version') {
-        //     return ( 
-        //         <h3> select a node </h3>
-        //     )
-        // }
-        // var index = window.location.href.lastIndexOf('/')
-        // if(index != -1){
-        //     var a = window.location.href.substring(index + 1)
-        // }
-        // console.log('windeow', a, window.location.href)
-        // if(a == 'version' || a.length == 0){
-        //     a = "监控预警系统"
-        // }
-        // this.state.serviceName = a
         return (
             <div>
-                 <h4 style={{color: '#369', fontSize: '14px', marginBottom: '-5px', marginTop: '0', marginLeft: '18px'}}> &nbsp;&nbsp;&nbsp;  {'    ' + this.state.serviceName}</h4> 
+                 <h4  style={{color: '#369', fontSize: '14px', marginTop: '0', marginLeft: '18px'}}> {this.state.serviceName}</h4> 
+                 <h4  id='notexist' style={{color: '#c33', fontSize: '14px', marginTop: '0', marginLeft: '18px', display: 'none'}}> 该服务不存在</h4>
+                <div id='show'>
+                <div id="myChart1" style={{ "width": "100%", "height": "320px"}}></div>
+                </div>
                  <div>
-                <div style={{overflow: "hidden", width: "100%", height: "100%"}}>
+                <div id='servicename' style={{overflow: "hidden", width: "100%", height: "100%"}}>
                 <div id="Div1" style={{ float: "left",  width: '105%', height: "105%", overflow:"scroll" }}>
-                    <canvas id = {"gitGraph" + this.state.serviceName}  style={{marginTop: "-30px"}}> </canvas>     
+                    <canvas id = "gitGraph"  style={{marginTop: "-30px"}}> </canvas>     
                 </div>
                 </div>
                 </div>

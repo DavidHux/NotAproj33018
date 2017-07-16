@@ -13,9 +13,11 @@ AppDispatcher.register(function (action) {
     case 'UPDATE_SERVICE_LIST':
       serviceStore.updateServiceListHandler(action.o)
       serviceStore.emitServiceChange()
-    case 'UPDATE_COMMIT_LIST':
-      versionStore.updateCommitListHandler(action.o)
-      versionStore.emitCommitChange()
+      break
+    case 'UPDATE_VERSION_SERVICE':
+      versionStore.updateServiceHandler(action.o)
+      versionStore.emitServiceChange()
+      break
     default:
       // no op
   }

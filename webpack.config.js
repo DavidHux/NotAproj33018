@@ -38,8 +38,14 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/data/asset/data/npmdepgraph.min10.json': {
-        target: 'http://echarts.baidu.com',
-        changeOrigin: true
+        target: 'http://114.212.189.147:10038',
+        changeOrigin: false
+      },
+      '/ssss': {
+        target: 'http://114.212.189.147:10038',
+        changeOrigin: true,
+        pathRewrite: {'^/ssss' : ''}
+
       },
       '/v2/apps/*': {
         target: 'http://marathon.njuics.cn',

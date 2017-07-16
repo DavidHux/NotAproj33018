@@ -2,9 +2,9 @@ import AppDispatcher from '../dispatcher/AppDispatcher'
 
 var VersionActions = {
 
-    updateCommit: function (o) {
+    updateService: function (o) {
         AppDispatcher.dispatch({
-            actionType: 'UPDATE_COMMIT_LIST',
+            actionType: 'UPDATE_VERSION_SERVICE',
             o: o
         });
     }

@@ -1,145 +1,14 @@
 import React from "react"
-import ReactDOM from "react-dom"
 import echarts from 'echarts'
 
 import serviceStore from '../../stores/serviceStore'
 import ServiceActions from '../../actions/ServiceActions'
 import versionStore from '../../stores/versionStore'
-var fdata = require('../../data/mydata')
+import VersionActions from '../../actions/VersionActions'
+var {fdata, data1, data2, timeo} = require('../../data/mydata')
 
-var addindex = 0
-var data1 = [
-    [{
-            "id": "广东水文",
-            "group": 3,
-            "color": "#d48265"
-        },
-        {
-            "id": "福建水文",
-            "group": 3,
-            "color": "#d48265"
-        }
-    ],
-
-    [{
-            "id": "江西水文",
-            "group": 3,
-            "color": "#d48265"
-        },
-        {
-            "id": "福建水文",
-            "group": 3,
-            "color": "#d48265"
-        }
-
-    ],
-    [{
-            "id": "浙江水文",
-            "group": 3,
-            "color": "#d48265"
-        },
-        {
-            "id": "江西水文",
-            "group": 3,
-            "color": "#d48265"
-        },
-        {
-            "id": "安徽水文",
-            "group": 3,
-            "color": "#d48265"
-        }
-    ],
-    [{
-            "id": "浙江水文",
-            "group": 3,
-            "color": "#d48265"
-        },
-        {
-            "id": "安徽水文",
-            "group": 3,
-            "color": "#d48265"
-        },
-        {
-            "id": "江苏水文",
-            "group": 3,
-            "color": "#d48265"
-        },
-        {
-            "id": "上海水文",
-            "group": 3,
-            "color": "#d48265"
-        }
-    ],
-    []
-]
-var data2 = [
-    [{
-            "source": "水文",
-            "target": "广东水文",
-            "value": 6
-        },
-        {
-            "source": "水文",
-            "target": "福建水文",
-            "value": 6
-        }
-    ],
-    [{
-            "source": "水文",
-            "target": "江西水文",
-            "value": 6
-        },
-        {
-            "source": "水文",
-            "target": "福建水文",
-            "value": 6
-        }
-    ],
-    [{
-            "source": "水文",
-            "target": "浙江水文",
-            "value": 6
-        },
-        {
-            "source": "水文",
-            "target": "安徽水文",
-            "value": 6
-        },
-        {
-            "source": "水文",
-            "target": "江西水文",
-            "value": 6
-        },
-    ],
-    [{
-            "source": "水文",
-            "target": "浙江水文",
-            "value": 6
-        },
-        {
-            "source": "水文",
-            "target": "安徽水文",
-            "value": 6
-        },
-
-        {
-            "source": "水文",
-            "target": "江苏水文",
-            "value": 6
-        },
-        {
-            "source": "水文",
-            "target": "上海水文",
-            "value": 6
-        }
-    ],
-    []
-]
+var testmode = false
 var myChart = null
-// var timeo = [95000, 160000, 180000, 195000, 220000]
-var timeo = [53000, 64000, 14000, 23000, 12000]
-
-// var timeo = [5000, 10000, 15000, 20000, 25000]
 
 export default class GraphLogic extends React.Component {
     constructor(props) {
@@ -152,13 +21,14 @@ export default class GraphLogic extends React.Component {
 
         em.on('deployNode', function(id){
             var that = this
-            var index = findID(id)
             // that.state.dataNodes[index].color = "#fac21b"
             this.state.deploying = true
-            console.log(that.state.dataNodes, id, index)
-            changeColor(index, "#fac21b", that.state.dataNodes[index].color, that.state.dataNodes[index].color)
+            // console.log(that.state.dataNodes, id, index)
+            var index1 = findID(id)
+            changeColor("#fac21b", that.state.dataNodes[index1].color, that.state.dataNodes[index1].color)
 
-            function changeColor(index, color1, color2, color3){
+            function changeColor( color1, color2, color3){
+                var index = findID(id)
                 that.state.dataNodes[index].color = color1
                 if(that.state.deploying == false) that.state.dataNodes[index].color = color3
                 myChart.setOption({
@@ -167,11 +37,11 @@ export default class GraphLogic extends React.Component {
                     }]
                 })
                 if(that.state.deploying == false) return
-                setTimeout(() => {changeColor(index, color2, color1, color3)}, 500)
+                setTimeout(() => {changeColor( color2, color1, color3)}, 500)
             }
             function findID(id){
                 for(var i = 0;i < that.state.dataNodes.length;i++){
-                    if(that.state.dataNodes[i].id == id){
+                    if(that.state.dataNodes[i].label == id){
                         return i
                     }
                 }
@@ -184,10 +54,15 @@ export default class GraphLogic extends React.Component {
         }.bind(this))
     }
     eConsole(param) {
-        console.log(param)
+        if(this.state.deploying == true){
+            console.log('a service is deploying...')
+            return
+        }
+        console.log('ecole', param)
         if (param.dataType == 'node') {
             // window.location.href = 'http://localhost:8080/#/logicView/' + param.name
-            em.emit('changeservice', param.name)
+            // em.emit('changeservice', param.name)
+            VersionActions.updateService(param.name)
         }
     }
 
@@ -196,8 +71,8 @@ export default class GraphLogic extends React.Component {
             x: null,
             y: null,
             draggable: true,
-            id: node.id,
-            name: node.id,
+            id: node.label,
+            name: node.label,
             symbolSize: node.size | 10,
             itemStyle: {
                 normal: {
@@ -212,11 +87,52 @@ export default class GraphLogic extends React.Component {
             target: edge.target
         };
     }
+    checkChanged(json){
+        if(json.nodes.length == this.state.dataNodes.length && json.links.length == this.state.dataLinks.length){
+            l1:for(var i = 0;i < json.nodes.length;i++){
+                for(var j = 0;j < this.state.dataNodes.length;j++){
+                    if(this.state.dataNodes[j].label == json.nodes[i].label)
+                        continue l1
+                }
+                return true
+            }
+            l2:for(var i = 0;i < json.links.length;i++){
+                for(var j = 0;j < this.state.dataLinks.length;j++){
+                    if(this.state.dataLinks[j].source == json.links[i].source && this.state.dataLinks[j].target == json.links[i].target)
+                        continue l2
+                }
+                return true
+            }
+            return false
+        }
+        // console.log('length :', json, this.state.dataLinks, this.state.dataNodes)
+        return true
+    }
 
     startPolling() {
         var that = this
+        setInterval(() => {
+            serviceStore.requestServiceList(getServiceList)
+            function getServiceList(json){
+                if(that.checkChanged.bind(that)(json)){
+                    console.log('service changed ')
+                    that.state.dataNodes = json.nodes
+                    that.state.dataLinks = json.links
+                    myChart.setOption({
+                        series: [{
+                            data: json.nodes.map(that.modNode),
+                            links: json.links.map(that.modLink)
+                        }]
+                    })
+                }
+            }
+        }, 2000)
+    }
+
+    startPolling2() {
+        var that = this
         var timeoutindex = 0
-        console.log('data14', data1[4])
+        // console.log('data14', data1[4])
         setTimeout(newdata, timeo[timeoutindex])
 
         function newdata() {
@@ -224,7 +140,7 @@ export default class GraphLogic extends React.Component {
             var dataTlinks = fdata.links.concat(data2[timeoutindex])
             var aaa = ''
             for(var i = 0;i < data1[timeoutindex].length;i++){
-                aaa += data1[timeoutindex][i].id+' '
+                aaa += data1[timeoutindex][i].label+' '
             }
             versionStore.emitMessage('服务依赖发生变化 ' + aaa)
             that.state.dataNodes = dataTnodes
@@ -248,8 +164,12 @@ export default class GraphLogic extends React.Component {
         myChart = echarts.init(document.getElementById('myChart0'));
         //npm dependences graph http://echarts.baidu.com/demo.html#graph-npm
         myChart.showLoading();
-        $.getJSON('/data/asset/data/npmdepgraph.min10.json', function (json1) {
-            var json = fdata
+        serviceStore.requestServiceList(getServiceList)
+        function getServiceList(json1) {
+            var json = json1
+            if(testmode == true){
+                json = fdata
+            }
             ServiceActions.updateService(json)
             myChart.hideLoading();
             myChart.setOption({
@@ -274,9 +194,6 @@ export default class GraphLogic extends React.Component {
                             show: true,
                             position: 'right'
                         }
-                        // emphasis: {
-                        //     show: true
-                        // }
                     },
                     roam: true,
                     focusNodeAdjacency: true
@@ -289,10 +206,14 @@ export default class GraphLogic extends React.Component {
                     // }
                 }]
             }, true);
-        });
+        }
         this.state.dataNodes = fdata.nodes
-        myChart.on('click', this.eConsole)
-        this.startPolling()
+        myChart.on('click', this.eConsole.bind(this))
+        if(testmode == true){
+            this.startPolling2()
+        } else {
+            this.startPolling()
+        }
     }
 
     render() {

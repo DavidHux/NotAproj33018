@@ -1,6 +1,7 @@
 import React from "react"
-import ReactDOM from "react-dom"
 import serviceStore from '../../stores/serviceStore'
+import versionStore from '../../stores/versionStore'
+import VersionActions from '../../actions/VersionActions'
 
 export default class ListLogic extends React.Component {
   constructor(props) {
@@ -12,22 +13,23 @@ export default class ListLogic extends React.Component {
       deploying: false,
       serviceName: '监控预警系统'
     }
-    em.on('changeservice', function(name){
-        this.setState({serviceName: name})
-    }.bind(this))
+    // em.on('changeservice', function(name){
+    //     this.setState({serviceName: name})
+    // }.bind(this))
     em.on('deployNode', function(id){
             var that = this
             this.state.deploying = true
-            var obj = $('#treeli'+id)
+            // var obj = $('#treeli'+id)
             var coo = $('#treeli'+id).css('color')
-            changeColor(obj, "#fac21b", coo, coo)
+            changeColor("#fac21b", coo, coo)
 
-            function changeColor(obj, color1, color2, color3){
+            function changeColor(color1, color2, color3){
+                var obj = $('#treeli'+id)
                 var colo = color1
                 if(that.state.deploying == false) colo = color3
                 obj.css('color', colo)
                 if(that.state.deploying == false) return
-                setTimeout(() => {changeColor(obj, color2, color1, color3)}, 500)
+                setTimeout(() => {changeColor(color2, color1, color3)}, 500)
             }
         }.bind(this))
         em.on('deployEnd', function(){
@@ -36,6 +38,7 @@ export default class ListLogic extends React.Component {
   }
   componentDidMount() {
     serviceStore.addServiceChangeListener(this._onChange.bind(this));
+    versionStore.addServiceChangeListener(this.__onChangeServiceName.bind(this))
     $.fn.extend({
 	treeview:	function() {
 		return this.each(function() {
@@ -79,16 +82,21 @@ export default class ListLogic extends React.Component {
 
 componentWillUnmount() {
     serviceStore.removeServiceChangeListener(this._onChange.bind(this));
+    versionStore.removeServiceChangeListener(this.__onChangeServiceName.bind(this))
 }
 _onChange() {
     this.state.lastServiceList = this.state.servicelist
     this.setState({servicelist: serviceStore.getServiceNameList()})
 }
+__onChangeServiceName(){
+    console.log('change service name')
+    this.setState({serviceName: versionStore.getCurrentServiceName()})
+}
 getLastIndex(id){
     // console.log(id, this.state.lastServiceList)
     if(this.state.lastServiceList.length == 0) return 0
     for(var i = 0;i < this.state.lastServiceList.length;i++){
-        if(this.state.lastServiceList[i].id == id){
+        if(this.state.lastServiceList[i].label == id){
             return i
         }
     }
@@ -96,16 +104,22 @@ getLastIndex(id){
 }
 render() {
     // console.log("window.location.href:", window.location.href)
+    var that = this
     if(this.state.servicelist != []){
       var list = this.state.servicelist.map((node, k) => {
             var color = "#369"
-          if(node.id == this.state.serviceName){
+          if(node.label == this.state.serviceName){
               color = "#ea4335"
-          } else if(this.getLastIndex(node.id) == -1){
+          } else if(this.getLastIndex(node.label) == -1){
             color = "#fbbc05"
           }
         return (
-            <li id={'treeLi' + node.id} key={k} style={{'color': color}} onClick={()=>{em.emit('changeservice', node.id)}}><a href='javascript:void(0)'>{node.id}</a></li>
+            <li id={'treeLi' + node.label} key={k} style={{'color': color}} onClick={
+                ()=>{ 
+                    if(that.state.deploying == false){
+                        VersionActions.updateService(node.label)}
+                    }
+                }><a href='javascript:void(0)'>{node.label}</a></li>
         )
       })
       return(
@@ -122,9 +136,9 @@ render() {
       )
     }
     return (
-      <div>
-    <h3> this is logic list.</h3>  
-  </div>
+        <div>
+            <h3> this is logic list.</h3>  
+        </div>
     )
   }
 }
