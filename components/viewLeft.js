@@ -44,12 +44,22 @@ const ViewLogic = () => (
     <div>
         <div className="col-md-2 col-sm-2 col-lg-2">
             <div className="panel panel-default" style={{height: '100%', marginTop: "0", marginBottom: '0'}}>
-            <ListTreeLogic />
+                <div className="panel-heading">
+                    <p className="panel-title">服务列表</p>
+                </div> 
+                <div className="panel-body" style={{padding: 0}}> 
+                    <ListTreeLogic />
+                </div>
             </div>
         </div>
         <div className="col-md-5 col-sm-5 col-lg-5">
-            <div className="panel panel-default" style={{height: '100%', marginTop: "0", marginBottom: '0'}}>            
-        <GraphLogic />
+            <div className="panel panel-default" style={{height: '100%', marginTop: "0", marginBottom: '0'}}>     
+                <div className="panel-heading">
+                    <p className="panel-title">系统结构</p>
+                </div> 
+                <div className="panel-body" style={{padding: 0}}>        
+                    <GraphLogic />
+                </div>
         </div>
         </div>
     </div>

@@ -38,11 +38,27 @@ const ViewSoftwareDefine = () => (
 export default class viewRight extends React.Component {
     constructor(props){
         super(props)
+        this.state = {
+            tab: 'tabVersion'
+        }
         // id = props.match.params.id
+    }
+    activeChange(id){
+        $('#tabVersion').removeClass('active')
+        $('#tabDefine').removeClass('active')
+        $("#" + id).addClass('active')
+        this.setState({tab: id})
     }
 
     render() {
         var match = this.props.match
+        var that = this
+        var x = null
+        if(this.state.tab == 'tabVersion'){
+            x = <Version />
+        } else {
+            x = <SoftwareDefine />
+        }
         // console.log(match.params.id)
         return (
             <div className="col-md-5 col-sm-5 col-lg-5 ">
@@ -54,8 +70,12 @@ export default class viewRight extends React.Component {
                         <Version ID={match.params.id} />
                     </Route>
                 </Switch> */}
-                <div className="panel panel-default" style={{height: '100%', marginTop: "0", marginBottom: '0', paddingTop: '20px'}}>
-                <Version />
+                <div className="panel panel-default" style={{height: '100%', marginTop: "0", marginBottom: '0'}}>
+                    <ul className="nav nav-tabs" style={{marginTop: '1px', marginLeft: '-1px', width: 'calc(100% + 2px)'}}>
+                        <li id='tabVersion' onClick={()=>{that.activeChange('tabVersion')}} className="active"><a href="#">服务版本</a></li>
+                        <li id='tabDefine' onClick={()=>{that.activeChange('tabDefine')}}><a href="#">软件定义</a></li>
+                    </ul>
+                    {x}
                 </div>
             </div>
         )

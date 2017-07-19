@@ -42,7 +42,7 @@ class VersionStore extends EventEmitter {
             var image = json.app.container.docker.image
             var id = image.substring(image.lastIndexOf(":") + 1)
             // console.log('current version :', id)
-            that.currentVersion = id
+            that.currentVersion = id   
             callback(id)
         }
     }
@@ -50,6 +50,10 @@ class VersionStore extends EventEmitter {
     getCurrentCommits(callback) {
         var that = this
         var num = serviceStore.getServiceNum(this.serviceName)
+        if(num == -1){
+            callback(-1)
+            return
+        }
         $.ajax({
             url: '/api/v4/projects/'+ num + '/repository/commits',
             type: 'GET',

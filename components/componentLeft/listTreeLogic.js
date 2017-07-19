@@ -123,8 +123,8 @@ render() {
         )
       })
       return(
-        <div style={{overflow: "hidden", width: "100%", height: "100%"}}>
-        <div className="panel-body" style={{  width: "115%", overflowY:"scroll", height: '100%'}}>
+        <div style={{overflow: "hidden", width: "100%", height: "calc(100% - 43px)"}}>
+        <div style={{  width: "115%", overflowY:"scroll", height: '100%'}}>
             <ul className="treeview">
                 <li><a href="javascript:void(0);">南京防汛防台风应急响应</a></li>
                 <ul>

@@ -73,7 +73,7 @@ export default class GraphLogic extends React.Component {
             draggable: true,
             id: node.label,
             name: node.label,
-            symbolSize: node.size | 10,
+            symbolSize: (node.size | 10) * 1.5,
             itemStyle: {
                 normal: {
                     color: node.color
@@ -184,7 +184,7 @@ export default class GraphLogic extends React.Component {
                     type: 'graph',
                     layout: 'force',
                     force: {
-                        repulsion: 300
+                        repulsion: 500
                     },
                     // progressiveThreshold: 700,
                     data: json.nodes.map(that.modNode),
@@ -218,9 +218,9 @@ export default class GraphLogic extends React.Component {
 
     render() {
         return (
-            <div style={{overflow: "hidden", width: "100%", height: "100%"}}>
-                <div id="myChart0" style={{ "width": "100%", "height": "380px"}}></div>
-            </div>
+            // <div style={{overflow: "hidden", width: "100%", height: "100%"}}>
+                <div id="myChart0" style={{ "width": "100%", "height": 'calc(100% - 43px)' }}></div>
+            //  </div> 
         )
     }
 }

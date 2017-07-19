@@ -41,6 +41,7 @@ export default class version extends React.Component {
         }
         global.window.onmousemove = this.movetooltip.bind(this)
         em.once('firstgetservice', function(){
+            // console.log('get service')
             this.setState({nodeAt: 4})
         }.bind(this))
 
@@ -67,18 +68,22 @@ export default class version extends React.Component {
     componentDidUpdate() {
         // var IDlast = window.location.href.substring(window.location.href.lastIndexOf('/') + 1)
         // if (IDlast == 'version') return;
+        
         if(this.state.serviceName != this.state.lastName){
             $('#notexist').css('display', 'none')            
-            $("#gitGraph").css('display', 'none')
+            $("#serviceGit").css('display', 'none')
             $('#show').css('display', 'block')
         }
 
         // console.log('update', this.state.serviceName)
         var that = this
+                console.log(that.state.serviceName, that.state.lastName)
+        
         versionStore.getCurrentVersion(processGraph)
 
         function processGraph(id) {
             // console.log('get current version call back:', id)
+         
             if(id == -1 || id == -2){
                 // $('#servicename').text('App '+ that.state.serviceName + ' does not exist')
                 console.log('App '+ that.state.serviceName + ' does not exist')
@@ -86,12 +91,19 @@ export default class version extends React.Component {
                     // $("#gitGraph").css('display', 'none')
                     $('#show').css('display', 'none')
                     $('#notexist').css('display', 'block')
+                    that.state.lastName = 'last'
                 }
                 return
             }
             versionStore.getCurrentCommits(ppp)
             function ppp(json){
                 // console.log("process json", json)
+                if(json == -1){
+                    $('#show').css('display', 'none')
+                    $('#notexist').css('display', 'block')
+                    that.state.lastName = 'last'
+                    return
+                }
                 that.state.commits = json
                 if (json == null)
                     return
@@ -117,7 +129,7 @@ export default class version extends React.Component {
                 }
                 if (that.state.serviceName != that.state.lastName) {
                     $('#show').css('display', 'none')
-                    $("#gitGraph").css('display', 'block')
+                    $("#serviceGit").css('display', 'block')
                     that.state.lastName = that.state.serviceName
                 }
 
@@ -225,9 +237,9 @@ export default class version extends React.Component {
             this.state.btnon = true
             $(".bs-example-tooltip .tooltip").css("display", "block")
             if (i < this.state.nodeAt) {
-                $(".tooltip-inner").text("click to roll back")
+                $(".tooltip-inner").text("部署旧版本")
             } else {
-                $(".tooltip-inner").text("click to update")
+                $(".tooltip-inner").text("部署新版本")
             }
         }
     }
@@ -252,17 +264,18 @@ export default class version extends React.Component {
 
     render() {
         // console.log('ppp;', this.state.serviceName)
+        // calc -25px : h4 height and html, body padding bottom both 5px title height 43px h4 margin top 5px
         return (
             <div>
-                 <h4  style={{color: '#369', fontSize: '14px', marginTop: '0', marginLeft: '18px'}}> {this.state.serviceName}</h4> 
+                 <h4  style={{color: '#369', fontSize: '14px', marginTop: '5px', marginLeft: '18px'}}> {this.state.serviceName}</h4> 
                  <h4  id='notexist' style={{color: '#c33', fontSize: '14px', marginTop: '0', marginLeft: '18px', display: 'none'}}> 该服务不存在</h4>
                 <div id='show'>
-                <div id="myChart1" style={{ "width": "100%", "height": "320px"}}></div>
+                <div id="myChart1" style={{ "width": "100%", "height": "300px"}}></div>
                 </div>
                  <div>
-                <div id='servicename' style={{overflow: "hidden", width: "100%", height: "100%"}}>
+                <div id='serviceGit' style={{overflow: "hidden", width: "100%", height: "calc(100% - 73px)"}}>
                 <div id="Div1" style={{ float: "left",  width: '105%', height: "105%", overflow:"scroll" }}>
-                    <canvas id = "gitGraph"  style={{marginTop: "-30px"}}> </canvas>     
+                    <canvas id = "gitGraph"  style={{marginTop: "-50px"}}> </canvas>     
                 </div>
                 </div>
                 </div>

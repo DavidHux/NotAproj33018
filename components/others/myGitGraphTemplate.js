@@ -14,7 +14,7 @@ var myTemplateConfig = {
             displayAuthor: true,
             displayBranch: true,
             displayHash: true,
-            font: "normal 12pt Arial"
+            font: "normal 10pt Arial"
         },
         shouldDisplayTooltipsInCompactMode: false, // default = true
         tooltipHTMLFormatter: function (commit) {
@@ -29,10 +29,10 @@ function commit(branch, o, i, that) {
         clickFunc = () => {}
     if (i == that.state.deployingNode && that.state.deploying == true) {
         color = that.state.deployNodeColor
-        tag = "Deploy"
+        tag = "正在部署"
     } else if (i == that.state.nodeAt) {
         color = "#34a853"
-        tag = "Running"
+        tag = "运行中"
     } else {
         if (i < that.state.nodeAt) {
             color = "#979797"
