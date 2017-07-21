@@ -154,6 +154,9 @@ class VersionStore extends EventEmitter {
     removeCommitChangeListener(callback) {
         this.removeListener('commitchange', callback);
     }
+    removeAll(){
+        this.removeAllListeners()
+    }
 
 }
 

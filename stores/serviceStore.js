@@ -1,5 +1,6 @@
 import EventEmitter from 'events'
 import ServiceActions from '../actions/ServiceActions'
+import versionStore from './versionStore'
 
 class ServiceStore extends EventEmitter {
     constructor() {
@@ -106,16 +107,50 @@ class ServiceStore extends EventEmitter {
             }
             // console.log('json', json)
             var ret = json
+            if((that.serviceList == null || that.serviceList.nodes.length == 0) && json.nodes.length != 0){
+                em.emit('firstgetservice')
+            }
             if (json.nodes.length == 0 && json.links.length == 0 && that.serviceList != null) {
                 ret = that.serviceList
             }
+            that.computeDifference(json, that.serviceList)
             // that.serviceList = ret
             ServiceActions.updateService(ret)
             callback(ret)
         }
     }
-    
-
+    computeDifference(now1, last1){
+        if(now1 == null || last1 == null || now1.nodes.length == 0 || last1.nodes.length == 0){
+            return
+        }
+        var now = now1.nodes, last = last1.nodes
+        var added = '', mmed = ''
+        l1:for(var i = 0;i < now.length;i++){
+            for(var j = 0;j < last.length;j++){
+                if(last[j].label == now[i].label){
+                    continue l1
+                }
+            }
+            added += now[i].label + ' '
+        }
+        l2:for(var i = 0;i < last.length;i++){
+            for(var j = 0;j < now.length;j++){
+                if(now[j].label == last[i].label){
+                    continue l2
+                }
+            }
+            mmed += last[i].label + ' '
+        }
+        if(added == '' && mmed == '') return
+        var msg = '服务状态更新：'
+        if(added != ''){
+            msg += '新加入服务 ' + added + '。'
+        }
+        if(mmed != ''){
+            msg += '服务 ' + mmed + '退出。'
+        }
+        versionStore.emitMessage(msg)
+    }
 }
 
 var serviceStore = new ServiceStore()

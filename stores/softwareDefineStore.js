@@ -43,7 +43,8 @@ class SoftwareDefineStore extends EventEmitter {
         });
 
         function processData(json) {
-            var id, cpus, mem, disk, gpus, type, image, network, version
+            var id, cpus, mem, disk, gpus, type, image, networkType, version,
+                instances, backoffSeconds, backoffFactor, command, ipAddress
             id = json.app.id
             cpus = json.app.cpus
             mem = json.app.mem
@@ -51,9 +52,14 @@ class SoftwareDefineStore extends EventEmitter {
             gpus = json.app.gpus
             type = json.app.container.type
             image = json.app.container.docker.image
-            network = json.app.container.docker.network
+            networkType = json.app.container.docker.network
             version = json.app.version
-            var f = []
+            instances = json.app.instances
+            backoffSeconds = json.app.backoffSeconds
+            backoffFactor = json.app.backoffFactor
+            command = json.app.cmd == null ? 'not configured' : json.app.cmd
+            ipAddress = json.app.container.ipAddress == null ? 'null' : json.app.container.ipAddress
+            var ff = [], f = [], f2 = []
             f.push(['id', id])
             f.push(['image', image])
             f.push(['cpus', cpus])
@@ -61,9 +67,18 @@ class SoftwareDefineStore extends EventEmitter {
             f.push(['disk', disk])
             f.push(['type', type])
             f.push(['image', image])
-            f.push(['network', network])
+            f.push(['instances', instances])
+            f.push(['backoff seconds', backoffSeconds])
+            f.push(['backoff factor', backoffFactor])
+            f.push(['command', command])
             f.push(['version', version])
-            callback(f)
+
+            f2.push(['network type', networkType])
+            f2.push(['ip address', ipAddress])
+            
+            ff.push(f)
+            ff.push(f2)
+            callback(ff)
         }
     }
 

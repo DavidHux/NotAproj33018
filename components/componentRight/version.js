@@ -40,25 +40,34 @@ export default class version extends React.Component {
             lastName: 'last'
         }
         global.window.onmousemove = this.movetooltip.bind(this)
-        em.once('firstgetservice', function(){
-            // console.log('get service')
-            this.setState({nodeAt: 4})
-        }.bind(this))
+        this.firstgGetService = this.firstgGetService.bind(this)
+        // em.on('firstgetservice', function(){
+        //     console.log('get service')
+        //     this.setState({ serviceName: versionStore.getCurrentServiceName()})
+        // }.bind(this))
 
+    }
+    firstgGetService(){
+        // console.log('get service')
+        this.setState({ serviceName: versionStore.getCurrentServiceName()})
     }
     
 
     componentDidMount() {
+        em.on('firstgetservice', this.firstgGetService)
         // if (this.state.serviceName == 'version') return;   
         // console.log('mount')
         myChart = echarts.init(document.getElementById('myChart1'));
         myChart.showLoading();
         versionStore.addServiceChangeListener(this._onVersionServiceChange.bind(this));
-        this.componentDidUpdate()
+        // this.componentDidUpdate()
+        this._onVersionServiceChange()
     }
 
     componentWillUnmount() {
-        versionStore.removeServiceChangeListener(this._onVersionServiceChange.bind(this))
+        em.removeListener('firstgetservice', this.firstgGetService)        
+        // versionStore.removeServiceChangeListener(this._onVersionServiceChange)
+        versionStore.removeAll()
         this.state.deploying = false
     }
     _onVersionServiceChange() {
@@ -77,7 +86,7 @@ export default class version extends React.Component {
 
         // console.log('update', this.state.serviceName)
         var that = this
-                console.log(that.state.serviceName, that.state.lastName)
+                // console.log(that.state.serviceName, that.state.lastName)
         
         versionStore.getCurrentVersion(processGraph)
 

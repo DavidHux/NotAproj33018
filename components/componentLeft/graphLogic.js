@@ -58,7 +58,7 @@ export default class GraphLogic extends React.Component {
             console.log('a service is deploying...')
             return
         }
-        console.log('ecole', param)
+        // console.log('ecole', param)
         if (param.dataType == 'node') {
             // window.location.href = 'http://localhost:8080/#/logicView/' + param.name
             // em.emit('changeservice', param.name)

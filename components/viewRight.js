@@ -10,24 +10,25 @@ import {
 } from 'react-router-dom'
 import Version from './componentRight/version'
 import SoftwareDefine from './componentRight/softwareDefine'
+import Measure from './componentRight/measure'
 
 var id = ''
 
-const Header = ({match}) => (
-  <header>
-    <nav>
-      <ul className="nav nav-tabs">
-        <li role="presentation" className="active"><Link to={`${match.url}`}>版本</Link></li>
-        <li role="presentation"><Link to={`${match.url}/softwareDefine`}>软件定义</Link></li>
-        <li role="presentation"><Link to={`${match.url}/measure`}>度量</Link></li>
-        <li role="presentation"><Link to='/'>
-            <button type="button" className="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </Link>
-        </li>
-      </ul>
-    </nav>
-  </header>
-)
+// const Header = ({match}) => (
+//   <header>
+//     <nav>
+//       <ul className="nav nav-tabs">
+//         <li role="presentation" className="active"><Link to={`${match.url}`}>版本</Link></li>
+//         <li role="presentation"><Link to={`${match.url}/softwareDefine`}>软件定义</Link></li>
+//         <li role="presentation"><Link to={`${match.url}/measure`}>度量</Link></li>
+//         <li role="presentation"><Link to='/'>
+//             <button type="button" className="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+//             </Link>
+//         </li>
+//       </ul>
+//     </nav>
+//   </header>
+// )
 // const ViewVersion = () => (
 //     <Version/>
 // )
@@ -46,6 +47,7 @@ export default class viewRight extends React.Component {
     activeChange(id){
         $('#tabVersion').removeClass('active')
         $('#tabDefine').removeClass('active')
+        $('#tabMeasure').removeClass('active')
         $("#" + id).addClass('active')
         this.setState({tab: id})
     }
@@ -56,8 +58,10 @@ export default class viewRight extends React.Component {
         var x = null
         if(this.state.tab == 'tabVersion'){
             x = <Version />
-        } else {
+        } else if(this.state.tab == 'tabDefine') {
             x = <SoftwareDefine />
+        } else {
+            x = <Measure />
         }
         // console.log(match.params.id)
         return (
@@ -74,6 +78,7 @@ export default class viewRight extends React.Component {
                     <ul className="nav nav-tabs" style={{marginTop: '1px', marginLeft: '-1px', width: 'calc(100% + 2px)'}}>
                         <li id='tabVersion' onClick={()=>{that.activeChange('tabVersion')}} className="active"><a href="#">服务版本</a></li>
                         <li id='tabDefine' onClick={()=>{that.activeChange('tabDefine')}}><a href="#">软件定义</a></li>
+                        <li id='tabMeasure' onClick={()=>{that.activeChange('tabMeasure')}}><a href="#">度量</a></li>                        
                     </ul>
                     {x}
                 </div>

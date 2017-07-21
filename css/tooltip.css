@@ -157,6 +157,34 @@ div.treeview ul:first-child:before {
 .node-details-info-field-label::after {
     content: ':';
 }
+.node-details-health-wrapper {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    -ms-flex-line-pack: center;
+    align-content: center;
+    text-align: center;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+.node-details-health-item {
+    padding: 8px 16px;
+    width: 33%;
+}
+.node-details-health-item-value {
+    color: #5b5b88;
+    font-size: 150%;
+    padding-bottom: 0.5em;
+}
+.metric-unit {
+    padding-left: 0.25em;
+}
+.node-details-health-item-label {
+    color: #5b5b88;
+    text-transform: uppercase;
+    font-size: 80%;
+}
  /*
   *  software define css
   *  end
