@@ -78,10 +78,10 @@ export default class measure extends React.Component {
                     <span className="metric-value">{(this.state.cpuL[5] / this.state.cpumax * 100).toFixed(3)}</span><span className="metric-unit">%</span></span>
                 </div>
                 <div className="node-details-health-item-sparkline">
-                    <div title={"Last 11 seconds, 6 samples, min: " + Math.min(...this.state.cpuL).toFixed(3) + ', max: ' + 
+                    <div title={"Last 60 seconds, "+ this.state.cpuL.length +" samples, min: " + Math.min(...this.state.cpuL).toFixed(3) + ', max: ' + 
                         Math.max(...this.state.cpuL).toFixed(3)+ '.'}>
                         <div style={{height: '100px', width: '300px', margin:'0 auto'}}>
-                        <Sparklines data={this.state.cpuL} limit={5} width={80} height={24} margin={5}>
+                        <Sparklines data={this.state.cpuL} width={80} height={24} margin={5}>
                             <SparklinesLine style={{ fill: "none", stroke:"#7d7da8", strokeWidth:"0.5px"}} max={this.state.cpumax}/>
                             <SparklinesSpots />
                         </Sparklines>
@@ -97,10 +97,10 @@ export default class measure extends React.Component {
                     <span className="metric-unit">MB</span></span>
                 </div>
                 <div className="node-details-health-item-sparkline">
-                    <div title={"Last 11 seconds, 6 samples, min: " + (Math.min(...this.state.meml) / 1024 / 1024).toFixed(1) + "MB, max: " +  
+                    <div title={"Last 60 seconds, " + this.state.meml.length + " samples, min: " + (Math.min(...this.state.meml) / 1024 / 1024).toFixed(1) + "MB, max: " +  
                      (Math.max(...this.state.meml) / 1024 / 1024).toFixed(1) + "MB."}>
                         <div style={{height: '100px', width: '300px', margin:'0 auto'}}>
-                        <Sparklines data={this.state.meml} limit={5} width={80} height={24} margin={5} >
+                        <Sparklines data={this.state.meml} width={80} height={24} margin={5} >
                             <SparklinesLine style={{ fill: "none", stroke:"#7d7da8", strokeWidth:"0.5px"}} max={this.state.memmax}/>
                             <SparklinesSpots />
                         </Sparklines>
