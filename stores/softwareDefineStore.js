@@ -58,7 +58,7 @@ class SoftwareDefineStore extends EventEmitter {
             backoffSeconds = json.app.backoffSeconds
             backoffFactor = json.app.backoffFactor
             command = json.app.cmd == null ? 'not configured' : json.app.cmd
-            ipAddress = json.app.container.ipAddress == null ? 'null' : json.app.container.ipAddress
+            ipAddress = json.app.tasks[0].ipAddresses[0].ipAddress == null ? 'null' : json.app.tasks[0].ipAddresses[0].ipAddress
             var ff = [], f = [], f2 = []
             f.push(['id', id])
             f.push(['image', image])

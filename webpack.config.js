@@ -54,7 +54,11 @@ module.exports = {
       '/api/v4/projects/*': {
         target: 'https://git.njuics.cn',
         changeOrigin: true
-      }
+      },
+      '/metric/nap/*': {
+        target: 'http://114.212.189.147:10011',
+        changeOrigin: true
+      },
     }
   }
 };

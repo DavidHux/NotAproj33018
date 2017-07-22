@@ -170,7 +170,7 @@ div.treeview ul:first-child:before {
 }
 .node-details-health-item {
     padding: 8px 16px;
-    width: 33%;
+    width: 100%;
 }
 .node-details-health-item-value {
     color: #5b5b88;

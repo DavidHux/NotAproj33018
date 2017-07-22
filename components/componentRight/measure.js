@@ -2,15 +2,22 @@
 
 import React from "react"
 import ReactDOM from "react-dom"
+import { Sparklines, SparklinesLine, SparklinesSpots } from 'react-sparklines'
 import SoftwareDefineStore from '../../stores/softwareDefineStore'
 import versionStore from '../../stores/versionStore'
+import serviceStore from '../../stores/serviceStore'
 
 
 export default class measure extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            serviceName: ''
+            serviceName: '',
+            cpuL: [0, 0, 0, 0, 0, 0],
+            meml: [0, 0, 0, 0, 0, 0],
+            cpumax: 1,
+            memmax: 1073741824,
+            polling: null
         }
         this._onServiceChange = this._onServiceChange.bind(this)
     }
@@ -20,12 +27,39 @@ export default class measure extends React.Component {
     }
     componentWillUnmount() {
         versionStore.removeAll()
+        clearInterval(this.state.polling)        
     }
     _onServiceChange() {
+        clearInterval(this.state.polling)
         var serviceName1 = versionStore.getCurrentServiceName()
-        this.setState({serviceName: serviceName1})
+        this.setState({serviceName: serviceName1}, this.startPolling)
     }
 
+    startPolling(){
+        var that = this
+        getMetric()
+        this.state.polling = setInterval(getMetric, 2000)
+        function getMetric(){
+            var url = serviceStore.getServiceUrl(that.state.serviceName)
+            if(url == -1){
+                console.log('get measure failed', that.state.serviceName)
+                return
+            }
+            $.ajax({
+                url: '/metric/nap/' + url,
+                type: 'GET',
+                success: getData,
+                error: function (e) {
+                    console.log('get metric failed', e)
+                }
+            })
+
+            function getData(json) {
+                that.setState({cpuL: json.cpu_array, meml: json.mem_array, cpumax: json.cpu_total})
+            }
+
+        }
+    }
     render(){
         return(
 
@@ -40,50 +74,45 @@ export default class measure extends React.Component {
     <div className="node-details-health" style={{"flexWrap": "nowrap", "justifyContent": "space-around"}}>
         <div className="node-details-health-wrapper">
             <div className="node-details-health-item">
-                <div className="node-details-health-item-value"><span className="metric-formatted"><span className="metric-value">10.69</span><span className="metric-unit">%</span></span>
+                <div className="node-details-health-item-value"><span className="metric-formatted">
+                    <span className="metric-value">{(this.state.cpuL[5] / this.state.cpumax * 100).toFixed(3)}</span><span className="metric-unit">%</span></span>
                 </div>
                 <div className="node-details-health-item-sparkline">
-                    <div title="Last 11 seconds, 12 samples, min: 6.50%, max: 11.62%, mean: 8.63%">
-                        <svg width="80" height="24">
-                            <path className="sparkline" fill="none" stroke="#7d7da8" strokeWidth="0.5px" d="M2,21.490154358627812L8.902181818181818,21.648605757477476L15.811272727272728,21.81355942715731L22.720363636363636,22L29.643272727272727,21.368033773142542L36.60072727272727,21.513283155261643L43.45454545454545,21.882840662278067L50.36363636363636,21.230166099014102L57.265818181818176,21.801268599286033L64.19563636363637,21.790028373327573L71.0909090909091,20.904295737697883L78,21.102736653207717"></path>
-                            <circle className="sparkcircle" cx="78" cy="21.102736653207717" fill="#46466a" fillOpacity="0.6"
-                                stroke="none" r="1.75"></circle>
-                        </svg>
+                    <div title={"Last 11 seconds, 6 samples, min: " + Math.min(...this.state.cpuL).toFixed(3) + ', max: ' + 
+                        Math.max(...this.state.cpuL).toFixed(3)+ '.'}>
+                        <div style={{height: '100px', width: '300px', margin:'0 auto'}}>
+                        <Sparklines data={this.state.cpuL} limit={5} width={80} height={24} margin={5}>
+                            <SparklinesLine style={{ fill: "none", stroke:"#7d7da8", strokeWidth:"0.5px"}} max={this.state.cpumax}/>
+                            <SparklinesSpots />
+                        </Sparklines>
+                        </div>
                     </div>
                 </div>
                 <div className="node-details-health-item-label">CPU</div>
+                <div className="node-details-health-item-label">total: {this.state.cpumax.toFixed(3)}</div>                
             </div>
             <div className="node-details-health-item">
-                <div className="node-details-health-item-value"><span className="metric-formatted"><span className="metric-value">17.3</span><span className="metric-unit">GB</span></span>
+                <div className="node-details-health-item-value"><span className="metric-formatted">
+                    <span className="metric-value">{(this.state.meml[5] / 1024 / 1024).toFixed(1)}</span>
+                    <span className="metric-unit">MB</span></span>
                 </div>
                 <div className="node-details-health-item-sparkline">
-                    <div title="Last 11 seconds, 12 samples, min: 17.3GB, max: 17.3GB, mean: 17.3GB">
-                        <svg width="80" height="24">
-                            <path className="sparkline" fill="none" stroke="#7d7da8" strokeWidth="0.5px" d="M2,21.996203297472157L8.902181818181818,21.998407751446656L15.811272727272728,22L22.720363636363636,21.999017384576128L29.643272727272727,21.997857281025954L36.60072727272727,21.999374933120418L43.45454545454545,21.999377505412102L50.36363636363636,21.99958586103863L57.265818181818176,21.99888362540848L64.19563636363637,21.99886047478331L71.0909090909091,21.998086214985964L78,21.998587811864645"></path>
-                            <circle className="sparkcircle" cx="78" cy="21.998587811864645" fill="#46466a" fillOpacity="0.6"
-                                stroke="none" r="1.75"></circle>
-                        </svg>
+                    <div title={"Last 11 seconds, 6 samples, min: " + (Math.min(...this.state.meml) / 1024 / 1024).toFixed(1) + "MB, max: " +  
+                     (Math.max(...this.state.meml) / 1024 / 1024).toFixed(1) + "MB."}>
+                        <div style={{height: '100px', width: '300px', margin:'0 auto'}}>
+                        <Sparklines data={this.state.meml} limit={5} width={80} height={24} margin={5} >
+                            <SparklinesLine style={{ fill: "none", stroke:"#7d7da8", strokeWidth:"0.5px"}} max={this.state.memmax}/>
+                            <SparklinesSpots />
+                        </Sparklines>
+                        </div>
                     </div>
                 </div>
                 <div className="node-details-health-item-label">Memory</div>
+                <div className="node-details-health-item-label">total: 1024MB</div>
             </div>
-            <div className="node-details-health-item">
-                <div className="node-details-health-item-value">3.19</div>
-                <div className="node-details-health-item-sparkline">
-                    <div title="Last 11 seconds, 12 samples, min: 2.75, max: 3.19, mean: 2.87">
-                        <svg width="80" height="24">
-                            <path className="sparkline" fill="none" stroke="#7d7da8" strokeWidth="0.5px" d="M2,22L8.902181818181818,22L15.811272727272728,22L22.720363636363636,22L29.643272727272727,21.09090909090909L36.60072727272727,21.09090909090909L43.45454545454545,21.09090909090909L50.36363636363636,21.09090909090909L57.265818181818176,21.09090909090909L64.19563636363637,2L71.0909090909091,2L78,2"></path>
-                            <circle className="sparkcircle" cx="78" cy="2" fill="#46466a" fillOpacity="0.6" stroke="none"
-                                r="1.75"></circle>
-                        </svg>
-                    </div>
-                </div>
-                <div className="node-details-health-item-label">Load (1m)</div>
-            </div>
-        </div><span></span></div>
+        </div></div>
 </div>
 </div>
-
 </div>
 </div>
         )
