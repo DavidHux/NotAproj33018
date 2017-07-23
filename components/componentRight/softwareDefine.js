@@ -1,6 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import SoftwareDefineStore from '../../stores/softwareDefineStore'
+import softwareDefineStore from '../../stores/softwareDefineStore'
 import versionStore from '../../stores/versionStore'
 
 
@@ -28,7 +28,7 @@ export default class softwareDefine extends React.Component {
     _onServiceChange() {
         // console.log('on service change')
         var serviceName1 = versionStore.getCurrentServiceName()
-        SoftwareDefineStore.getDefine(serviceName1, this.getDefineCallback.bind(this))        
+        softwareDefineStore.getDefine(serviceName1, this.getDefineCallback.bind(this))        
         this.state.serviceName = serviceName1
     }
 

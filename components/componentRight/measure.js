@@ -3,7 +3,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import { Sparklines, SparklinesLine, SparklinesSpots } from 'react-sparklines'
-import SoftwareDefineStore from '../../stores/softwareDefineStore'
+import softwareDefineStore from '../../stores/softwareDefineStore'
 import versionStore from '../../stores/versionStore'
 import serviceStore from '../../stores/serviceStore'
 
@@ -27,19 +27,29 @@ export default class measure extends React.Component {
     }
     componentWillUnmount() {
         versionStore.removeAll()
-        clearInterval(this.state.polling)        
+        clearInterval(this.state.polling)     
+        // console.log('unmount', this.state.polling)   
     }
     _onServiceChange() {
+        var that = this
+        // console.log('service change', this.state.polling)           
         clearInterval(this.state.polling)
         var serviceName1 = versionStore.getCurrentServiceName()
-        this.setState({serviceName: serviceName1}, this.startPolling)
+        softwareDefineStore.getDefine(serviceName1, (def) => {
+            if(def != null){
+                that.state.memmax = def[0][3][1]
+            }
+            that.setState({serviceName: serviceName1}, that.startPolling.bind(that))
+        })
     }
 
     startPolling(){
         var that = this
         getMetric()
+        clearInterval(this.state.polling)
         this.state.polling = setInterval(getMetric, 2000)
         function getMetric(){
+            // console.log(that.state.serviceName, that.state.polling)
             var url = serviceStore.getServiceUrl(that.state.serviceName)
             if(url == -1){
                 console.log('get measure failed', that.state.serviceName)
@@ -75,13 +85,13 @@ export default class measure extends React.Component {
         <div className="node-details-health-wrapper">
             <div className="node-details-health-item">
                 <div className="node-details-health-item-value"><span className="metric-formatted">
-                    <span className="metric-value">{(this.state.cpuL[5] / this.state.cpumax * 100).toFixed(3)}</span><span className="metric-unit">%</span></span>
+                    <span className="metric-value">{(this.state.cpuL[5] * 100).toFixed(3)}</span><span className="metric-unit">%</span></span>
                 </div>
                 <div className="node-details-health-item-sparkline">
-                    <div title={"Last 60 seconds, "+ this.state.cpuL.length +" samples, min: " + Math.min(...this.state.cpuL).toFixed(3) + ', max: ' + 
-                        Math.max(...this.state.cpuL).toFixed(3)+ '.'}>
+                    <div title={"Last 100 seconds, "+ this.state.cpuL.length +" samples, min: " + (Math.min(...this.state.cpuL) * 100).toFixed(3) + '%, max: ' + 
+                        (Math.max(...this.state.cpuL) * 100).toFixed(3)+ '%.'}>
                         <div style={{height: '100px', width: '300px', margin:'0 auto'}}>
-                        <Sparklines data={this.state.cpuL} width={80} height={24} margin={5}>
+                        <Sparklines data={this.state.cpuL} width={80} height={24} margin={5} max={1}>
                             <SparklinesLine style={{ fill: "none", stroke:"#7d7da8", strokeWidth:"0.5px"}} max={this.state.cpumax}/>
                             <SparklinesSpots />
                         </Sparklines>
@@ -89,7 +99,7 @@ export default class measure extends React.Component {
                     </div>
                 </div>
                 <div className="node-details-health-item-label">CPU</div>
-                <div className="node-details-health-item-label">total: {this.state.cpumax.toFixed(3)}</div>                
+                <div className="node-details-health-item-label">Accumulation: {this.state.cpumax.toFixed(3)}</div>                
             </div>
             <div className="node-details-health-item">
                 <div className="node-details-health-item-value"><span className="metric-formatted">
@@ -100,15 +110,15 @@ export default class measure extends React.Component {
                     <div title={"Last 60 seconds, " + this.state.meml.length + " samples, min: " + (Math.min(...this.state.meml) / 1024 / 1024).toFixed(1) + "MB, max: " +  
                      (Math.max(...this.state.meml) / 1024 / 1024).toFixed(1) + "MB."}>
                         <div style={{height: '100px', width: '300px', margin:'0 auto'}}>
-                        <Sparklines data={this.state.meml} width={80} height={24} margin={5} >
-                            <SparklinesLine style={{ fill: "none", stroke:"#7d7da8", strokeWidth:"0.5px"}} max={this.state.memmax}/>
+                        <Sparklines data={this.state.meml} width={80} height={24} margin={5} max={this.state.memmax}>
+                            <SparklinesLine style={{ fill: "none", stroke:"#7d7da8", strokeWidth:"0.5px"}} />
                             <SparklinesSpots />
                         </Sparklines>
                         </div>
                     </div>
                 </div>
                 <div className="node-details-health-item-label">Memory</div>
-                <div className="node-details-health-item-label">total: 1024MB</div>
+                <div className="node-details-health-item-label">total: {this.state.memmax}MB</div>
             </div>
         </div></div>
 </div>

@@ -30,8 +30,13 @@
     "webpack": "^3.0.0"
   },
   "devDependencies": {
+    "css-loader": "^0.28.4",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.5",
+    "lodash": "^4.17.4",
     "open-browser-webpack-plugin": "0.0.5",
     "react-sparklines": "^1.6.0",
+    "style-loader": "^0.18.2",
     "webpack-dev-server": "~2.5.0"
   }
 }

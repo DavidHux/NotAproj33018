@@ -1,10 +1,32 @@
 import React from "react"
-import ReactDOM from "react-dom"
+import _ from 'lodash';
 
-const GraphPhysics = () => (
-  <div>
-    <h3> this is physics graph.</h3>  
-  </div>
-)
+import serviceStore from '../../stores/serviceStore'
 
-export default GraphPhysics
+import '../../css/style.less';
+var {fdata, data1, data2, timeo} = require('../../data/mydata')
+
+export default class GraphPhysics extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            dataNodes: []
+        }
+    }
+
+    componentDidMount() {
+        
+    }
+
+    render() {
+        return (
+            <div style={{overflow: "hidden", width: "100%", height: "calc(100% - 43px)"}}>
+                <div id="Div1" style={{ float: "left",  width: '105%', height: "105%", overflow:"scroll" }}>
+                    <div id="app">
+                         this is physical view.
+                    </div>
+                </div>
+            </div>
+        )
+    }
+}

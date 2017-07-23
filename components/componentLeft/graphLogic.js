@@ -60,6 +60,7 @@ export default class GraphLogic extends React.Component {
         }
         // console.log('ecole', param)
         if (param.dataType == 'node') {
+            // console.log('click')
             // window.location.href = 'http://localhost:8080/#/logicView/' + param.name
             // em.emit('changeservice', param.name)
             VersionActions.updateService(param.name)

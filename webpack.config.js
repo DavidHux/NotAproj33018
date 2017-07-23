@@ -24,7 +24,10 @@ module.exports = {
         query: {
           presets: ['react']
         }
-      },
+      },{
+        test: /\.less$/,
+        loaders: ['style-loader', 'css-loader', 'less-loader']
+      }
     ]
   },
   plugins: [
