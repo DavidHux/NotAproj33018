@@ -29,17 +29,9 @@ var activeChange = (id) => {
 // });
 }
 
-const Header = () => (
-  <header>
-    <nav>
-      <ul className="nav nav-tabs">
-        <li role="presentation" id='idTabLogic' onClick={() => activeChange('idTabLogic')} className="active"><Link to='/logicView/version'>逻辑视图</Link></li>
-        <li role="presentation" id='idTabPhysics' onClick={() => activeChange('idTabPhysics')}><Link to='/physicsView/version'>物理视图</Link></li>
-        {/*<li role="presentation" id='idd' ><Link to='/logicView/version'>right</Link></li>*/}
-      </ul>
-    </nav>
-  </header>
-)
+var logical = false
+
+var x = logical ? <GraphLogic /> : <GraphPhysics />
 const ViewLogic = () => (
     <div>
         <div className="col-md-2 col-sm-2 col-lg-2">
@@ -58,19 +50,13 @@ const ViewLogic = () => (
                     <p className="panel-title">系统结构</p>
                 </div> 
                 <div className="panel-body" style={{padding: 0}}>        
-                    <GraphLogic />
+                    {x}
                 </div>
         </div>
         </div>
     </div>
 )
-const ViewPhysics = () => (
-    <div>
-        <GraphPhysics />
-        <ListPhysics />
-        123
-    </div>
-)
+
 
 export default class viewLeft extends React.Component {
 

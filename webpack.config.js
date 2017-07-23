@@ -27,6 +27,9 @@ module.exports = {
       },{
         test: /\.less$/,
         loaders: ['style-loader', 'css-loader', 'less-loader']
+      },{
+        test: /\.css$/,
+        loaders: ['style-loader', 'css-loader']
       }
     ]
   },
@@ -62,6 +65,18 @@ module.exports = {
         target: 'http://114.212.189.147:10011',
         changeOrigin: true
       },
+      '/nodes': {
+        target: 'http://114.212.189.147:10011',
+        changeOrigin: true
+      },
+      '/tasks': {
+        target: 'http://114.212.189.147:10011',
+        changeOrigin: true
+      },
+      '/services': {
+        target: 'http://114.212.189.147:10011',
+        changeOrigin: true
+      }
     }
   }
 };
