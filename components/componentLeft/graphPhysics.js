@@ -4,7 +4,7 @@ import * as d3 from 'd3'
 
 import provider from './imported/data-provider';
 import { hasClass, removeClass, addClass, uuidRegExp } from './imported/helpers';
-let MS = 5000
+// let MS = 5000
 
 import serviceStore from '../../stores/serviceStore'
 
@@ -17,7 +17,8 @@ export default class GraphPhysics extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      dataNodes: []
+      dataNodes: [],
+      polling: null
     }
   }
 
@@ -35,7 +36,7 @@ export default class GraphPhysics extends React.Component {
     }
 
     function render({root}) {
-          console.log('render', root)
+          // console.log('render', root)
 
       var cluster, node, container, clusterEnter, nodeEnter;
       cluster = wrapper.selectAll('.node-cluster').data(root);
@@ -71,7 +72,7 @@ export default class GraphPhysics extends React.Component {
       container = node
         .select('.node-content')
         .selectAll('.mycontainer').data((d) => d.children);
-    console.log(1)
+    // console.log(1)
 
 
       container.enter()
@@ -98,7 +99,7 @@ export default class GraphPhysics extends React.Component {
 
           return `<span data-state='${_.kebabCase(state || "byon")}' class='name'>${name}</span>`;
         })
-    console.log(12)
+    // console.log(12)
 
       node
         .select('.node-meta')
@@ -135,9 +136,18 @@ export default class GraphPhysics extends React.Component {
 
     console.log("Polling refresh: " + MS);
 
-    provider.on('infrastructure-data', render);
+    em.on('infrastructure-data', render);
     provider.start();
-    reload();
+    this.startPolling()
+  }
+  componentWillUnmount(){
+    this.stopPolling()
+  }
+  startPolling(){
+    this.state.polling = setInterval(provider.reload, MS)
+  }
+  stopPolling(){
+    clearInterval(this.state.polling)
   }
 
   render() {

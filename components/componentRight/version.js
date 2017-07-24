@@ -214,7 +214,7 @@ export default class version extends React.Component {
                         em.emit('deployEnd')
                         versionStore.emitMessage(that.state.serviceName  + "服务版本部署完毕")
                     } else {
-                        setTimeout(()=>{getResponse(serviceName)}, 3000)
+                        setTimeout(()=>{getResponse(serviceName)}, RS)
                     }
                 } else {
                     console.log('change version wrong', json)
@@ -223,7 +223,7 @@ export default class version extends React.Component {
         }
         setTimeout(() => {
             depNodeColor("#979797", "#fac21b")
-        }, 500)
+        }, DE)
 
         function depNodeColor(color1, color2) {
             that.setState({
@@ -233,7 +233,7 @@ export default class version extends React.Component {
                 // console.log("dep node color", color1, color2)
                 setTimeout(() => {
                     depNodeColor(color2, color1)
-                }, 500)
+                }, DE)
             }
         }
     }
