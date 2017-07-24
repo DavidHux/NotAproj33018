@@ -22,11 +22,9 @@ export default class GraphPhysics extends React.Component {
   }
 
   componentDidMount() {
-    console.log(1, d3)
     var vis = d3.select('#app')
       .append('div')
       .attr('id', 'vis-physical');
-    console.log(1)
     
     var wrapper = vis.append('div')
       .classed('wrapper', true);
@@ -59,7 +57,6 @@ export default class GraphPhysics extends React.Component {
       node = cluster
         .select('.node-cluster-content')
         .selectAll('.node').data((d) => d.children);
-    console.log(1)
 
       nodeEnter = node.enter()
         .append('div')
@@ -100,8 +97,8 @@ export default class GraphPhysics extends React.Component {
           }
 
           return `<span data-state='${_.kebabCase(state || "byon")}' class='name'>${name}</span>`;
-        });
-    console.log(1)
+        })
+    console.log(12)
 
       node
         .select('.node-meta')
@@ -148,7 +145,6 @@ export default class GraphPhysics extends React.Component {
         <div style={{overflow: "hidden", width: "100%", height: "calc(100% - 43px)"}}>
                 <div id="Div1" style={{ float: "left",  width: '105%', height: "105%", overflow:"scroll" }}>
                     <div id="app">
-                         this is physical view.
                     </div>
                 </div>
             </div>

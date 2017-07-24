@@ -29,12 +29,12 @@ var activeChange = (id) => {
 // });
 }
 
-var logical = false
+var logical = true
 
 var x = logical ? <GraphLogic /> : <GraphPhysics />
 const ViewLogic = () => (
     <div>
-        <div className="col-md-2 col-sm-2 col-lg-2">
+        <div className="col-md-3 col-sm-3 col-lg-3">
             <div className="panel panel-default" style={{height: '100%', marginTop: "0", marginBottom: '0'}}>
                 <div className="panel-heading">
                     <p className="panel-title">服务列表</p>

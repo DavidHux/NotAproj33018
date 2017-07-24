@@ -1,5 +1,5 @@
 var myTemplateConfig = {
-    colors: ["#979797", "#008fb5", "#f1c109"], // branches colors, 1 per column
+    colors: ["#000000", "#008fb5", "#f1c109"], // branches colors, 1 per column
     branch: {
         lineWidth: 8,
         spacingX: 20,
@@ -14,7 +14,7 @@ var myTemplateConfig = {
             displayAuthor: true,
             displayBranch: true,
             displayHash: true,
-            font: "normal 10pt Arial"
+            font: "bold 10pt Arial"
         },
         shouldDisplayTooltipsInCompactMode: false, // default = true
         tooltipHTMLFormatter: function (commit) {
