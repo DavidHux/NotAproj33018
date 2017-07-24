@@ -37,7 +37,7 @@ export default class GraphLogic extends React.Component {
                     }]
                 })
                 if(that.state.deploying == false) return
-                setTimeout(() => {changeColor( color2, color1, color3)}, 500)
+                setTimeout(() => {changeColor( color2, color1, color3)}, DE)
             }
             function findID(id){
                 for(var i = 0;i < that.state.dataNodes.length;i++){
@@ -111,6 +111,10 @@ export default class GraphLogic extends React.Component {
     }
 
     startPolling() {
+        if(polling == true){
+            return
+        }
+        polling = true
         var that = this
         setInterval(() => {
             serviceStore.requestServiceList(getServiceList)
@@ -127,7 +131,7 @@ export default class GraphLogic extends React.Component {
                     })
                 }
             }
-        }, 2000)
+        }, RS)
     }
 
     startPolling2() {

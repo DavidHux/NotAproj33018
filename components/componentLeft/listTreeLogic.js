@@ -29,7 +29,7 @@ export default class ListLogic extends React.Component {
                 if(that.state.deploying == false) colo = color3
                 obj.css('color', colo)
                 if(that.state.deploying == false) return
-                setTimeout(() => {changeColor(color2, color1, color3)}, 500)
+                setTimeout(() => {changeColor(color2, color1, color3)}, DE)
             }
         }.bind(this))
         em.on('deployEnd', function(){

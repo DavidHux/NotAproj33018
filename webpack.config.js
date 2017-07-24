@@ -62,19 +62,19 @@ module.exports = {
         changeOrigin: true
       },
       '/metric/nap/*': {
-        target: 'http://114.212.189.147:10011',
+        target: 'http://114.212.189.147:10054',
         changeOrigin: true
       },
       '/nodes': {
-        target: 'http://114.212.189.147:10011',
+        target: 'http://114.212.189.147:10054',
         changeOrigin: true
       },
       '/tasks': {
-        target: 'http://114.212.189.147:10011',
+        target: 'http://114.212.189.147:10054',
         changeOrigin: true
       },
       '/services': {
-        target: 'http://114.212.189.147:10011',
+        target: 'http://114.212.189.147:10054',
         changeOrigin: true
       }
     }

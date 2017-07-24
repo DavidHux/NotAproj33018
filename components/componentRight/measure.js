@@ -47,7 +47,7 @@ export default class measure extends React.Component {
         var that = this
         getMetric()
         clearInterval(this.state.polling)
-        this.state.polling = setInterval(getMetric, 2000)
+        this.state.polling = setInterval(getMetric, RS)
         function getMetric(){
             // console.log(that.state.serviceName, that.state.polling)
             var url = serviceStore.getServiceUrl(that.state.serviceName)

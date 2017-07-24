@@ -112,12 +112,12 @@ let physicalStructProvider = ([initialNodes, initialContainers]) => {
       } = container;
       let [nodeUuid] = uuidRegExp.exec(node);
       _.find(root, (cluster) => {
-        let node = _.findWhere(cluster.children, {
+        let node = _.find(cluster.children, {
           uuid: nodeUuid
         });
         if (!node) return;
 
-        let target = _.findWhere(node.children, {
+        let target = _.find(node.children, {
           uuid
         }) || {};
         if (!target) return;
@@ -154,7 +154,7 @@ let physicalStructProvider = ([initialNodes, initialContainers]) => {
     },
 
     updateNodeCluster = (nodeCluster) => {
-      var currentCluster = _.findWhere(root, {
+      var currentCluster = _.find(root, {
         uuid: nodeCluster.uuid
       });
       Object.assign(currentCluster, nodeCluster);
@@ -164,7 +164,7 @@ let physicalStructProvider = ([initialNodes, initialContainers]) => {
       let cloned = Object.assign({}, node);
       cloned.children = [];
       let clusterUuid = "clusterid";
-      let cluster = _.findWhere(root, {
+      let cluster = _.find(root, {
         uuid: clusterUuid
       });
       if (cluster) cluster.children.push(cloned);
@@ -271,7 +271,7 @@ class DataProvider extends EventEmitter {
 
     function deal(resources) {
       PHYSICAL_STRUCT = physicalStructProvider(resources);
-      that.emit('infrastructure-data', PHYSICAL_STRUCT.data());
+      em.emit('infrastructure-data', PHYSICAL_STRUCT.data());
       // that.emit('start-reload');
     }
   }
@@ -291,7 +291,7 @@ class DataProvider extends EventEmitter {
       if (!PHYSICAL_STRUCT)
         PHYSICAL_STRUCT = physicalStructProvider(resources);
       PHYSICAL_STRUCT.updateData(resources);
-      that.emit('infrastructure-data', PHYSICAL_STRUCT.data());
+      em.emit('infrastructure-data', PHYSICAL_STRUCT.data());
     }
   }
 }
@@ -301,7 +301,7 @@ function getallResources(callback) {
   getAllNodes(temp, (data1) => {
     getAllTasks(data1, (data2) => {
       getAllServices(data2, (data3) => {
-        console.log('get all resources', data3)
+        // console.log('get all resources', data3)
         callback(data3)
       })
     })

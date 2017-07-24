@@ -19,56 +19,58 @@ import ListTreeLogic from './componentLeft/listTreeLogic'
 
 import ViewRight from './viewRight'
 
-var activeChange = (id) => {
-    $('#idTabLogic').removeClass('active')
-    $('#idTabPhysics').removeClass('active')
-    $("#" + id).addClass('active')
-//     $(".nav a").on("click", function(){
-//    $(".nav").find(".active").removeClass("active");
-//    $(this).parent().addClass("active");
-// });
-}
 
-var logical = true
 
-var x = logical ? <GraphLogic /> : <GraphPhysics />
-const ViewLogic = () => (
-    <div>
-        <div className="col-md-3 col-sm-3 col-lg-3">
-            <div className="panel panel-default" style={{height: '100%', marginTop: "0", marginBottom: '0'}}>
-                <div className="panel-heading">
-                    <p className="panel-title">服务列表</p>
-                </div> 
-                <div className="panel-body" style={{padding: 0}}> 
-                    <ListTreeLogic />
-                </div>
-            </div>
-        </div>
-        <div className="col-md-5 col-sm-5 col-lg-5">
-            <div className="panel panel-default" style={{height: '100%', marginTop: "0", marginBottom: '0'}}>     
-                <div className="panel-heading">
-                    <p className="panel-title">系统结构</p>
-                </div> 
-                <div className="panel-body" style={{padding: 0}}>        
-                    {x}
-                </div>
-        </div>
-        </div>
-    </div>
-)
+
+var onlylogical = false
+
 
 
 export default class viewLeft extends React.Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            tab:'tabLogicalView'
+        }   
+    }
+    activeChange(id){
+        $('#tabLogicalView').removeClass('active')
+        $('#tabPhysicalView').removeClass('active')
+        $("#" + id).addClass('active')
+        this.setState({tab: id})
+    }
+
 
     render() {
+        var x
+        if(!onlylogical){
+            x = this.state.tab == 'tabLogicalView' ? <GraphLogic /> : <GraphPhysics />
+        } else {
+            x = <GraphLogic />
+        }
+        
         return (
-            <div >
-                {/* <Header /> className="col-md-7 col-sm-7 col-lg-7" */ }
-                {/* <Redirect from='/' to='/logicView/version' /> */}
-                {/* <Route path='/logicView' component={ViewLogic} /> */}
-                {/* <Route path='/physicsView' component={ViewPhysics} /> */}
-                <ViewLogic />
+        <div>
+            <div className="col-md-2 col-sm-2 col-lg-2" style={{padding: "0 5px"}}>
+                <div className="panel panel-default" style={{height: '100%', marginTop: "0", marginBottom: '0'}}>
+                    <div className="panel-heading">
+                        <p className="panel-title">服务列表</p>
+                    </div> 
+                    <div className="panel-body" style={{padding: 0}}> 
+                        <ListTreeLogic />
+                    </div>
+                </div>
             </div>
+            <div className="col-md-6 col-sm-6 col-lg-6" style={{padding: "0 5px"}}>
+                <div className="panel panel-default" style={{height: '100%', marginTop: "0", marginBottom: '0'}}>     
+                    <ul className="nav nav-tabs" style={{marginTop: '1px', marginLeft: '-1px', width: 'calc(100% + 2px)'}}>
+                        <li id='tabLogicalView' onClick={()=>{this.activeChange.bind(this)('tabLogicalView')}} className="active"><a href="#">逻辑视图</a></li>
+                        <li id='tabPhysicalView' onClick={()=>{this.activeChange.bind(this)('tabPhysicalView')}}><a href="#">物理视图</a></li>
+                    </ul>
+                    {x}
+                </div>
+            </div>
+        </div>
         )
     }
 }
