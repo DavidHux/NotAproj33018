@@ -29,7 +29,7 @@ var activeChange = (id) => {
 // });
 }
 
-var logical = true
+var logical = false
 
 var x = logical ? <GraphLogic /> : <GraphPhysics />
 const ViewLogic = () => (
