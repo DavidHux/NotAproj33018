@@ -2,11 +2,13 @@ var myTemplateConfig = {
     colors: ["#000000", "#008fb5", "#f1c109"], // branches colors, 1 per column
     branch: {
         lineWidth: 8,
-        spacingX: 20,
+        spacingX: 60,
         showLabel: false, // display branch names on graph
     },
     commit: {
         spacingY: -45,
+        // spacingX: -10,        
+        
         dot: {
             size:12
         },
@@ -19,6 +21,9 @@ var myTemplateConfig = {
         shouldDisplayTooltipsInCompactMode: false, // default = true
         tooltipHTMLFormatter: function (commit) {
             return "" + commit.sha1 + "" + ": " + commit.message;
+        },
+        tag: {
+            spacingX : 0
         }
     }
 }
@@ -44,8 +49,9 @@ function commit(branch, o, i, that) {
         }
     }
     branch.commit({
+        // x: 50,
         lineWidth: 8,
-        spacingX: 20,
+        // spacingX: 100,
         showLabel: true,
         dotColor: color,
         dotSize: 5,

@@ -136,6 +136,15 @@ export default class version extends React.Component {
                         myTemplate.commit(master, json[i], json.length - 1 - i, that)
                     }
                 }
+                    var develop = that.state.gitGraph.branch("develop"); // New branch from HEAD
+    develop.commit("Develop a feature - part 1");
+    develop.commit("Develop a feature - part 2");
+
+    master.commit({
+        message: "Fast bugfix",
+        author: "John Fixer"
+    });
+    develop.merge(master);
                 if (that.state.serviceName != that.state.lastName) {
                     $('#show').css('display', 'none')
                     $("#serviceGit").css('display', 'block')
