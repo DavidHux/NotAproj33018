@@ -197,7 +197,12 @@ export default class GraphLogic extends React.Component {
                     label: {
                         normal: {
                             show: true,
-                            position: 'right'
+                            position: 'right',
+                            textStyle: {
+                                fontSize: 14,
+                                fontWeight: 'bold'
+                                // fontFamily: '宋体'
+                            }
                         }
                     },
                     roam: true,

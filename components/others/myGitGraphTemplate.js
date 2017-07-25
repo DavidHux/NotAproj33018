@@ -14,7 +14,7 @@ var myTemplateConfig = {
             displayAuthor: true,
             displayBranch: true,
             displayHash: true,
-            font: "bold 10pt Arial"
+            font: "10pt Arial"
         },
         shouldDisplayTooltipsInCompactMode: false, // default = true
         tooltipHTMLFormatter: function (commit) {

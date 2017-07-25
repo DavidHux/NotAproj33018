@@ -63,9 +63,9 @@ export default class viewLeft extends React.Component {
             </div>
             <div className="col-md-6 col-sm-6 col-lg-6" style={{padding: "0 5px"}}>
                 <div className="panel panel-default" style={{height: '100%', marginTop: "0", marginBottom: '0'}}>     
-                    <ul className="nav nav-tabs" style={{marginTop: '1px', marginLeft: '-1px', width: 'calc(100% + 2px)'}}>
-                        <li id='tabLogicalView' onClick={()=>{this.activeChange.bind(this)('tabLogicalView')}} className="active"><a href="#">逻辑视图</a></li>
-                        <li id='tabPhysicalView' onClick={()=>{this.activeChange.bind(this)('tabPhysicalView')}}><a href="#">物理视图</a></li>
+                    <ul className="nav nav-tabs" style={{marginLeft: '-1px', width: 'calc(100% + 2px)', height:'42px'}}>
+                        <li id='tabLogicalView' onClick={()=>{this.activeChange.bind(this)('tabLogicalView')}} className="active"><a href="#" style={{fontSize: '16px'}}>逻辑视图</a></li>
+                        <li id='tabPhysicalView' onClick={()=>{this.activeChange.bind(this)('tabPhysicalView')}}><a href="#" style={{fontSize: '16px'}}>物理视图</a></li>
                     </ul>
                     {x}
                 </div>

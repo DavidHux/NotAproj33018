@@ -75,10 +75,10 @@ export default class viewRight extends React.Component {
                     </Route>
                 </Switch> */}
                 <div className="panel panel-default" style={{height: '100%', marginTop: "0", marginBottom: '0'}}>
-                    <ul className="nav nav-tabs" style={{marginTop: '1px', marginLeft: '-1px', width: 'calc(100% + 2px)'}}>
-                        <li id='tabVersion' onClick={()=>{that.activeChange('tabVersion')}} className="active"><a href="#">服务版本</a></li>
-                        <li id='tabDefine' onClick={()=>{that.activeChange('tabDefine')}}><a href="#">软件定义</a></li>
-                        <li id='tabMeasure' onClick={()=>{that.activeChange('tabMeasure')}}><a href="#">度量</a></li>                        
+                    <ul className="nav nav-tabs" style={{marginLeft: '-1px', width: 'calc(100% + 2px)', height:'42px'}}>
+                        <li id='tabVersion' onClick={()=>{that.activeChange('tabVersion')}} className="active"><a href="#" style={{fontSize: '16px'}}>服务版本</a></li>
+                        <li id='tabDefine' onClick={()=>{that.activeChange('tabDefine')}}><a href="#" style={{fontSize: '16px'}}>软件定义</a></li>
+                        <li id='tabMeasure' onClick={()=>{that.activeChange('tabMeasure')}}><a href="#" style={{fontSize: '16px'}}>度量</a></li>                        
                     </ul>
                     {x}
                 </div>
