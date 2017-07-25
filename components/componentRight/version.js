@@ -9,19 +9,9 @@ import serviceStore from "../../stores/serviceStore"
 // const GraphLogic = () => (
 
 // )
-var data1 = require('../../data/commit1')
-var data2 = require('../../data/commit2')
-var data3 = require('../../data/commit3')
-var data = []
-data.push(data1)
-data.push(data2)
-data.push(data3)
 
-var list = [
-    ["监控预警系统"],
-    ["水文", "天气", "台风", "信息发布"],
-    ["暴雨预警", "雷电预警", "暴雪预警"]
-]
+var data3 = require('../../data/commit3')
+
 var myChart = null
 
 export default class version extends React.Component {
@@ -129,22 +119,23 @@ export default class version extends React.Component {
                     // elementId: "gitGraph" + that.state.serviceName,
                     mode: "extended" // or compact if you don't want the messages
                 })
-                var branches = []
+                var istop = that.state.serviceName == '监控预警系统' ? 2 : 0
                 var master = that.state.gitGraph.branch("master");
-                for (var i = json.length - 1; i >= 0; i--) {
+                for (var i = json.length - 1; i >= istop; i--) {
                     if (true) { //check json[i] type
                         myTemplate.commit(master, json[i], json.length - 1 - i, that)
                     }
                 }
-                    var develop = that.state.gitGraph.branch("develop"); // New branch from HEAD
-    develop.commit("Develop a feature - part 1");
-    develop.commit("Develop a feature - part 2");
+                //new branch
+                if(that.state.serviceName == '监控预警系统'){
+                    var develop = that.state.gitGraph.branch("dev"); // New branch from HEAD
+                    myTemplate.commit(develop, data3[i], data3.length - 1 - i, that)
+                    myTemplate.commit(develop, data3[1], data3.length - 1 - 1, that)                    
+                    myTemplate.commit(master, json[1], json.length - 1 - 1, that)
+                    myTemplate.commit(develop, data3[0], data3.length - 1 - 0, that)                    
+                    myTemplate.merge(master, develop, json[0], json.length - 1, that)
+                }
 
-    master.commit({
-        message: "Fast bugfix",
-        author: "John Fixer"
-    });
-    develop.merge(master);
                 if (that.state.serviceName != that.state.lastName) {
                     $('#show').css('display', 'none')
                     $("#serviceGit").css('display', 'block')
@@ -181,6 +172,13 @@ export default class version extends React.Component {
         var that = this
         
         var yp = param.y / myTemplate.config.commit.spacingY
+        if(yp == this.state.commits.length){
+            yp -= 2
+        } else if(yp == this.state.commits.length + 2){
+            yp -= 4
+        }
+        console.log(yp)
+        // return
         var id = this.state.commits[this.state.commits.length - 1 - yp].short_id
         console.log('choose version ', id, yp, i)
         versionStore.changeVersion(id)

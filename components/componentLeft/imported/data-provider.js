@@ -87,9 +87,9 @@ let physicalStructProvider = ([initialNodes, initialContainers]) => {
           "<span class='contname' style='color: white; font-weight: bold;font-size: 12px'>" + serviceName + "</span>" +
           "<br/> image : " + imageNameMatches[0] +
           "<br/> tag : " + (tagName ? tagName : "latest") +
-          "<br/>" + (cloned.Spec.ContainerSpec.Args ? " cmd : " + cloned.Spec.ContainerSpec.Args + "<br/>" : "") +
-          " updated : " + dateStamp +
-          "<br/>" + cloned.Status.ContainerStatus.ContainerID +
+          // "<br/>" + (cloned.Spec.ContainerSpec.Args ? " cmd : " + cloned.Spec.ContainerSpec.Args + "<br/>" : "") +
+          // " updated : " + dateStamp +
+          // "<br/>" + cloned.Status.ContainerStatus.ContainerID +
           "<br/> state : " + startState +
           "</div>";
 
@@ -192,15 +192,16 @@ let physicalStructProvider = ([initialNodes, initialContainers]) => {
               name = node.Description.Hostname;
               if (name.length > 0) {
                 currentnode.Description.Hostname = name;
-                currentnode.name = name + " <br/> " + node.Spec.Role +
-                  " <br/>" + (currentnode.Description.Resources.MemoryBytes / 1024 / 1024 / 1024).toFixed(3) + "G RAM <br/>";
-                for (var key in node.Spec.Labels) {
-                  if (node.Spec.Labels[key].length > 0) {
-                    currentnode.name += " <br/> " + key + "=" + node.Spec.Labels[key];
-                  } else {
-                    currentnode.name += " <br/> " + key;
-                  }
-                }
+                currentnode.name = name + " <br/> " 
+                // + node.Spec.Role +
+                //   " <br/>" + (currentnode.Description.Resources.MemoryBytes / 1024 / 1024 / 1024).toFixed(3) + "G RAM <br/>";
+                // for (var key in node.Spec.Labels) {
+                //   if (node.Spec.Labels[key].length > 0) {
+                //     currentnode.name += " <br/> " + key + "=" + node.Spec.Labels[key];
+                //   } else {
+                //     currentnode.name += " <br/> " + key;
+                //   }
+                // }
               }
               updateNode(currentnode, node.state, node.Spec);
             }
