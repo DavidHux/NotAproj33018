@@ -172,15 +172,17 @@ export default class version extends React.Component {
         var that = this
         
         var yp = param.y / myTemplate.config.commit.spacingY
-        if(yp == this.state.commits.length){
-            yp -= 2
-        } else if(yp == this.state.commits.length + 2){
-            yp -= 4
+        if (this.state.serviceName == '监控预警系统') {
+            if (yp == this.state.commits.length) {
+                yp -= 2
+            } else if (yp == this.state.commits.length + 2) {
+                yp -= 3
+            }
         }
-        console.log(yp)
+        // console.log(yp)
         // return
         var id = this.state.commits[this.state.commits.length - 1 - yp].short_id
-        console.log('choose version ', id, yp, i)
+        // console.log('choose version ', id, yp, i)
         versionStore.changeVersion(id)
         this.state.deployingNode = yp
         this.setState({
@@ -194,7 +196,7 @@ export default class version extends React.Component {
         setTimeout(()=>{getResponse(sss)}, 10000)
 
         function getResponse(serviceName) {
-            console.log('check service, servicename', serviceName)
+            // console.log('check service, servicename', serviceName)
             var url = serviceStore.getServiceUrl(serviceName)
             $.ajax({
                 type: 'GET',
