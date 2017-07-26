@@ -9,6 +9,9 @@
  .tooltip {
      position: relative;;
  }
+/* ::-webkit-scrollbar { 
+    display: none;
+} */
 
 /*
  *  list tree css

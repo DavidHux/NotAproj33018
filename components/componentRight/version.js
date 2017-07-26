@@ -295,10 +295,10 @@ export default class version extends React.Component {
                 <div id="myChart1" style={{ "width": "100%", "height": "300px"}}></div>
                 </div>
                  <div>
-                <div id='serviceGit' style={{overflow: "hidden", width: "100%", height: "calc(100% - 73px)"}}>
-                <div id="Div1" style={{ float: "left",  width: '105%', height: "105%", overflow:"scroll" }}>
+                <div id='serviceGit' style={{overflow: "hidden", width: "100%", height: "calc(100% - 73px)" }}>
+                 <div id="Div1" style={{ float: "left",  width: '105%', height: "105%", overflow:"scroll" }}> 
                     <canvas id = "gitGraph"  style={{marginTop: "-50px"}}> </canvas>     
-                </div>
+                 </div> 
                 </div>
                 </div>
 

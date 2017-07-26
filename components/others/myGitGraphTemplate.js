@@ -2,7 +2,7 @@ var myTemplateConfig = {
     colors: ["#000000", "#008fb5", "#f1c109"], // branches colors, 1 per column
     branch: {
         lineWidth: 8,
-        spacingX: 60,
+        spacingX: 50,
         showLabel: false, // display branch names on graph
     },
     commit: {

@@ -53,7 +53,7 @@ export default class viewLeft extends React.Component {
         <div>
             <div className="col-md-2 col-sm-2 col-lg-2" style={{padding: "0 5px"}}>
                 <div className="panel panel-default" style={{height: '100%', marginTop: "0", marginBottom: '0'}}>
-                    <div className="panel-heading">
+                    <div className="panel-heading" style={{background: '#fff'}}>
                         <p className="panel-title">服务列表</p>
                     </div> 
                     <div className="panel-body" style={{padding: 0}}> 
