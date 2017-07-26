@@ -26,27 +26,30 @@ export default class softwareDefine extends React.Component {
     componentDidUpdate(){
     }
     _onServiceChange() {
-        // console.log('on service change')
+        var that = this
         var serviceName1 = versionStore.getCurrentServiceName()
-        softwareDefineStore.getDefine(serviceName1, this.getDefineCallback.bind(this))        
-        this.state.serviceName = serviceName1
+        // console.log('on service change define view', serviceName1)
+        softwareDefineStore.getDefine(serviceName1, (def) => {
+            // console.log('define', def)
+            if (def == -1) {
+                that.setState({ serviceName: serviceName1, define: null })
+                console.log('software define not exist')
+                return
+            }
+            that.setState({ serviceName: serviceName1, define: def })
+        })
     }
 
-    getDefineCallback(def){
-        // console.log('define', def)
-        if(def == -1){
-            console.log('software define not exist')
-            return
-        }
-        this.setState({define: def})
-    }
+    
 
     
     render() {
         // console.log('this.state.def', this.state.define)
         if(this.state.define == null){
             return(
-                <div> </div>
+                <div> 
+                <h4  style={{color: '#369', fontSize: '14px', marginTop: '5px', marginLeft: '18px'}}> {this.state.serviceName}</h4>                     
+                </div>
             )
         }
         var general = this.state.define[0].map((item, index) => {

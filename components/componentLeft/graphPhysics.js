@@ -36,7 +36,7 @@ export default class GraphPhysics extends React.Component {
     }
 
     function render({root}) {
-          // console.log('render', root)
+      // console.log('start render')
 
       var cluster, node, container, clusterEnter, nodeEnter;
       cluster = wrapper.selectAll('.node-cluster').data(root);
@@ -127,6 +127,7 @@ export default class GraphPhysics extends React.Component {
       cluster.exit().remove();
       container.exit().remove();
       node.exit().remove();
+      // console.log('reder stop')
     }
 
     function reload(){
@@ -138,6 +139,9 @@ export default class GraphPhysics extends React.Component {
 
     em.on('infrastructure-data', render);
     provider.start();
+    provider.reload();
+    provider.reload();
+    provider.reload();
     this.startPolling()
   }
   componentWillUnmount(){

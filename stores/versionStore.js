@@ -137,9 +137,11 @@ class VersionStore extends EventEmitter {
 
     addServiceChangeListener(callback) {
         this.on('versionServiceChange', callback);
+        // console.log('add listener', callback)
     }
 
     removeServiceChangeListener(callback) {
+        // console.log('remove listener', callback)
         this.removeListener('versionServicechange', callback);
     }
 
@@ -156,6 +158,7 @@ class VersionStore extends EventEmitter {
     }
     removeAll(){
         this.removeAllListeners()
+        em.emit('removeAll')
     }
 
 }

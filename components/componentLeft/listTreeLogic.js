@@ -35,6 +35,9 @@ export default class ListLogic extends React.Component {
         em.on('deployEnd', function(){
             this.state.deploying = false
         }.bind(this))
+    em.on('removeAll', function(){
+        versionStore.addServiceChangeListener(this.__onChangeServiceName.bind(this))     
+    }.bind(this))
   }
   componentDidMount() {
     serviceStore.addServiceChangeListener(this._onChange.bind(this));
@@ -89,7 +92,7 @@ _onChange() {
     this.setState({servicelist: serviceStore.getServiceNameList()})
 }
 __onChangeServiceName(){
-    console.log('change service name')
+    // console.log('change service name list')
     this.setState({serviceName: versionStore.getCurrentServiceName()})
 }
 getLastIndex(id){

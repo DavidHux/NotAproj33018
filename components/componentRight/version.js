@@ -31,6 +31,7 @@ export default class version extends React.Component {
         }
         global.window.onmousemove = this.movetooltip.bind(this)
         this.firstgGetService = this.firstgGetService.bind(this)
+        this._onVersionServiceChange = this._onVersionServiceChange.bind(this)
         // em.on('firstgetservice', function(){
         //     console.log('get service')
         //     this.setState({ serviceName: versionStore.getCurrentServiceName()})
@@ -49,7 +50,7 @@ export default class version extends React.Component {
         // console.log('mount')
         myChart = echarts.init(document.getElementById('myChart1'));
         myChart.showLoading();
-        versionStore.addServiceChangeListener(this._onVersionServiceChange.bind(this));
+        versionStore.addServiceChangeListener(this._onVersionServiceChange);
         // this.componentDidUpdate()
         this._onVersionServiceChange()
     }
@@ -62,6 +63,7 @@ export default class version extends React.Component {
     }
     _onVersionServiceChange() {
         // this.state.lastServiceList = this.state.servicelist
+        // console.log('version service change')
         this.setState({ serviceName: versionStore.getCurrentServiceName()})
     }
     componentDidUpdate() {
@@ -85,7 +87,7 @@ export default class version extends React.Component {
          
             if(id == -1 || id == -2){
                 // $('#servicename').text('App '+ that.state.serviceName + ' does not exist')
-                console.log('App '+ that.state.serviceName + ' does not exist')
+                // console.log('App '+ that.state.serviceName + ' does not exist')
                 if (that.state.serviceName != that.state.lastName) {
                     // $("#gitGraph").css('display', 'none')
                     $('#show').css('display', 'none')
@@ -189,6 +191,7 @@ export default class version extends React.Component {
             deploying: true
         })
         em.emit("deployNode", this.state.serviceName)
+        em.emit("deployNode1", this.state.serviceName)
         versionStore.emitMessage(this.state.serviceName + "服务开始部署版本：" + id)
         // setTimeout(()=>{this.setState({ deploying : false, nodeAt : yp})}, 3000)
         var sss = that.state.serviceName + ''
@@ -221,6 +224,7 @@ export default class version extends React.Component {
                             nodeAt: that.state.deployingNode
                         })
                         em.emit('deployEnd')
+                        em.emit('deployEnd1')
                         versionStore.emitMessage(that.state.serviceName  + "服务版本部署完毕")
                     } else {
                         setTimeout(()=>{getResponse(serviceName)}, RS)

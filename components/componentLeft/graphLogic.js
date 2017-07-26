@@ -18,13 +18,19 @@ export default class GraphLogic extends React.Component {
             dataLinks: [],
             deploying: false
         }
-
-        em.on('deployNode', function(id){
+    }
+    componentWillUnmount(){
+        em.removeAllListeners('deployNode1')
+        em.removeAllListeners('deployEnd1')
+    }
+    mounted(){
+        em.on('deployNode1', function(id){
             var that = this
             // that.state.dataNodes[index].color = "#fac21b"
             this.state.deploying = true
             // console.log(that.state.dataNodes, id, index)
             var index1 = findID(id)
+            console.log('deploying ', that.state, id)
             changeColor("#fac21b", that.state.dataNodes[index1].color, that.state.dataNodes[index1].color)
 
             function changeColor( color1, color2, color3){
@@ -49,7 +55,7 @@ export default class GraphLogic extends React.Component {
                 return -1
             }
         }.bind(this))
-        em.on('deployEnd', function(){
+        em.on('deployEnd1', function(){
             this.state.deploying = false
         }.bind(this))
     }
@@ -120,7 +126,7 @@ export default class GraphLogic extends React.Component {
             serviceStore.requestServiceList(getServiceList)
             function getServiceList(json){
                 if(that.checkChanged.bind(that)(json)){
-                    console.log('service changed ')
+                    // console.log('service changed ')
                     that.state.dataNodes = json.nodes
                     that.state.dataLinks = json.links
                     myChart.setOption({
@@ -165,6 +171,7 @@ export default class GraphLogic extends React.Component {
     }
 
     componentDidMount() {
+        this.mounted()
         var that = this
         myChart = echarts.init(document.getElementById('myChart0'));
         //npm dependences graph http://echarts.baidu.com/demo.html#graph-npm
@@ -175,6 +182,7 @@ export default class GraphLogic extends React.Component {
             if(testmode == true){
                 json = fdata
             }
+            that.state.dataNodes = json.nodes     
             ServiceActions.updateService(json)
             myChart.hideLoading();
             myChart.setOption({
@@ -217,7 +225,6 @@ export default class GraphLogic extends React.Component {
                 }]
             }, true);
         }
-        this.state.dataNodes = fdata.nodes
         myChart.on('click', this.eConsole.bind(this))
         if(testmode == true){
             this.startPolling2()

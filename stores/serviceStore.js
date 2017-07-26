@@ -15,7 +15,7 @@ class ServiceStore extends EventEmitter {
     // }
     getServiceUrl(id){
         if (this.serviceList == null) {
-            console.log('get url of service failed!')
+            // console.log('get url of service failed!')
             return -1
         }
         if(id == '监控预警系统'){

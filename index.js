@@ -16,7 +16,7 @@ var $ = require('jquery');
 window.$ = window.jQuery = $;
 window.em = em
 window.polling = false
-window.MS = 5000
+window.MS = 10000
 window.RS = 3000
 window.DE = 500
 

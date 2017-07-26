@@ -15,8 +15,10 @@ export default class measure extends React.Component {
             serviceName: '',
             cpuL: [0, 0, 0, 0, 0, 0],
             meml: [0, 0, 0, 0, 0, 0],
+            cpuNow: 0,
+            memNow: 0,
             cpumax: 1,
-            memmax: 1073741824,
+            memmax: 1073741824 * 2,
             polling: null
         }
         this._onServiceChange = this._onServiceChange.bind(this)
@@ -65,7 +67,7 @@ export default class measure extends React.Component {
             })
 
             function getData(json) {
-                that.setState({cpuL: json.cpu_array, meml: json.mem_array, cpumax: json.cpu_total})
+                that.setState({cpuL: json.cpu_array, meml: json.mem_array, cpumax: json.cpu_total, cpuNow: json.cpu, memNow: json.mem})
             }
 
         }
@@ -85,7 +87,7 @@ export default class measure extends React.Component {
         <div className="node-details-health-wrapper">
             <div className="node-details-health-item">
                 <div className="node-details-health-item-value"><span className="metric-formatted">
-                    <span className="metric-value">{(this.state.cpuL[5] * 100).toFixed(3)}</span><span className="metric-unit">%</span></span>
+                    <span className="metric-value">{(this.state.cpuNow * 100).toFixed(3)}</span><span className="metric-unit">%</span></span>
                 </div>
                 <div className="node-details-health-item-sparkline">
                     <div title={"Last 100 seconds, "+ this.state.cpuL.length +" samples, min: " + (Math.min(...this.state.cpuL) * 100).toFixed(3) + '%, max: ' + 
@@ -103,7 +105,7 @@ export default class measure extends React.Component {
             </div>
             <div className="node-details-health-item">
                 <div className="node-details-health-item-value"><span className="metric-formatted">
-                    <span className="metric-value">{(this.state.meml[5] / 1024 / 1024).toFixed(1)}</span>
+                    <span className="metric-value">{(this.state.memNow / 1024 / 1024).toFixed(1)}</span>
                     <span className="metric-unit">MB</span></span>
                 </div>
                 <div className="node-details-health-item-sparkline">

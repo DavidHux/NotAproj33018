@@ -9,8 +9,9 @@ class SoftwareDefineStore extends EventEmitter {
 
     getDefine(serviceName, callback){
         for(var i = 0;i < this.defines.length;i++){
-            if(this.defines[i].name = serviceName){
+            if(this.defines[i].name == serviceName){
                 callback(this.defines[i].define)
+                return
             }
         }
 
@@ -18,6 +19,7 @@ class SoftwareDefineStore extends EventEmitter {
             if(value == -1){
                 console.log('err get new define should not be null')
                 callback(-1)
+                return
             }
             this.defines.push({name: serviceName, define: value})
             callback(value)
