@@ -103,7 +103,7 @@ class VersionStore extends EventEmitter {
                 console.log("change version failed", e)
             }
         }).done(function (msg) {
-            console.log('change version success:', msg)
+            // console.log('change version success:', msg)
         });
     }
 

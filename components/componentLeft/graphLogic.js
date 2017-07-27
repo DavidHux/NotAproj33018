@@ -16,21 +16,30 @@ export default class GraphLogic extends React.Component {
         this.state = {
             dataNodes: [],
             dataLinks: [],
-            deploying: false
+            deploying: false,
+            interval: null,
+            timeoutDeploy: null
         }
+    }
+    componentDidMount() {
+        this.mounted()
+        this.drawGraph()
+        this.startPolling()
     }
     componentWillUnmount(){
         em.removeAllListeners('deployNode1')
         em.removeAllListeners('deployEnd1')
+        clearInterval(this.state.interval)
+        clearTimeout(this.state.timeoutDeploy)
     }
     mounted(){
         em.on('deployNode1', function(id){
             var that = this
             // that.state.dataNodes[index].color = "#fac21b"
             this.state.deploying = true
-            // console.log(that.state.dataNodes, id, index)
             var index1 = findID(id)
-            console.log('deploying ', that.state, id)
+            // console.log(that.state.dataNodes, id, index1)
+            // console.log('deploying ', that.state, id)
             changeColor("#fac21b", that.state.dataNodes[index1].color, that.state.dataNodes[index1].color)
 
             function changeColor( color1, color2, color3){
@@ -43,7 +52,7 @@ export default class GraphLogic extends React.Component {
                     }]
                 })
                 if(that.state.deploying == false) return
-                setTimeout(() => {changeColor( color2, color1, color3)}, DE)
+                that.state.timeoutDeploy = setTimeout(() => {changeColor( color2, color1, color3)}, DE)
             }
             function findID(id){
                 for(var i = 0;i < that.state.dataNodes.length;i++){
@@ -66,9 +75,6 @@ export default class GraphLogic extends React.Component {
         }
         // console.log('ecole', param)
         if (param.dataType == 'node') {
-            // console.log('click')
-            // window.location.href = 'http://localhost:8080/#/logicView/' + param.name
-            // em.emit('changeservice', param.name)
             VersionActions.updateService(param.name)
         }
     }
@@ -117,16 +123,12 @@ export default class GraphLogic extends React.Component {
     }
 
     startPolling() {
-        if(polling == true){
-            return
-        }
-        polling = true
         var that = this
-        setInterval(() => {
+        this.state.interval = setInterval(() => {
             serviceStore.requestServiceList(getServiceList)
             function getServiceList(json){
                 if(that.checkChanged.bind(that)(json)){
-                    // console.log('service changed ')
+                    // console.log('service changed ', json)
                     that.state.dataNodes = json.nodes
                     that.state.dataLinks = json.links
                     myChart.setOption({
@@ -140,48 +142,13 @@ export default class GraphLogic extends React.Component {
         }, RS)
     }
 
-    startPolling2() {
-        var that = this
-        var timeoutindex = 0
-        // console.log('data14', data1[4])
-        setTimeout(newdata, timeo[timeoutindex])
-
-        function newdata() {
-            var dataTnodes = fdata.nodes.concat(data1[timeoutindex])
-            var dataTlinks = fdata.links.concat(data2[timeoutindex])
-            var aaa = ''
-            for(var i = 0;i < data1[timeoutindex].length;i++){
-                aaa += data1[timeoutindex][i].label+' '
-            }
-            versionStore.emitMessage('服务依赖发生变化 ' + aaa)
-            that.state.dataNodes = dataTnodes
-            var newdd = {nodes: dataTnodes, links: dataTlinks}
-            ServiceActions.updateService(newdd)
-            console.log(dataTlinks, dataTnodes)
-            myChart.setOption({
-                series: [{
-                    data: dataTnodes.map(that.modNode),
-                    links: dataTlinks.map(that.modLink)
-                }]
-            })
-            if (timeoutindex < 4) {
-                setTimeout(newdata, timeo[++timeoutindex])
-            }
-        }
-    }
-
-    componentDidMount() {
-        this.mounted()
+    drawGraph(){
         var that = this
         myChart = echarts.init(document.getElementById('myChart0'));
-        //npm dependences graph http://echarts.baidu.com/demo.html#graph-npm
         myChart.showLoading();
         serviceStore.requestServiceList(getServiceList)
         function getServiceList(json1) {
             var json = json1
-            if(testmode == true){
-                json = fdata
-            }
             that.state.dataNodes = json.nodes     
             ServiceActions.updateService(json)
             myChart.hideLoading();
@@ -215,22 +182,10 @@ export default class GraphLogic extends React.Component {
                     },
                     roam: true,
                     focusNodeAdjacency: true
-                    // lineStyle: {
-                    //     normal: {
-                    //         width: 1,
-                    //         curveness: 0.3,
-                    //         opacity: 0.7
-                    //     }
-                    // }
                 }]
             }, true);
         }
         myChart.on('click', this.eConsole.bind(this))
-        if(testmode == true){
-            this.startPolling2()
-        } else {
-            this.startPolling()
-        }
     }
 
     render() {

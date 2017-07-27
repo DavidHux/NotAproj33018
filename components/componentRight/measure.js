@@ -13,6 +13,7 @@ export default class measure extends React.Component {
         super(props)
         this.state = {
             serviceName: '',
+            measure: null,
             cpuL: [0, 0, 0, 0, 0, 0],
             meml: [0, 0, 0, 0, 0, 0],
             cpuNow: 0,
@@ -38,10 +39,14 @@ export default class measure extends React.Component {
         clearInterval(this.state.polling)
         var serviceName1 = versionStore.getCurrentServiceName()
         softwareDefineStore.getDefine(serviceName1, (def) => {
+            if (def == -1) {
+                that.setState({ serviceName: serviceName1, measure: null })
+                return
+            }
             if(def != null){
                 that.state.memmax = def[0][3][1]
             }
-            that.setState({serviceName: serviceName1}, that.startPolling.bind(that))
+            that.setState({serviceName: serviceName1, measure: 1}, that.startPolling.bind(that))
         })
     }
 
@@ -73,6 +78,13 @@ export default class measure extends React.Component {
         }
     }
     render(){
+        if(this.state.measure == null){
+            return(
+                <div> 
+                <h4  style={{color: '#369', fontSize: '14px', marginTop: '5px', marginLeft: '18px'}}> {this.state.serviceName}</h4>                     
+                </div>
+            )
+        }
         return(
 
 <div style={{overflow: "hidden", width: "100%", height: "calc(100% - 43px)"}}>

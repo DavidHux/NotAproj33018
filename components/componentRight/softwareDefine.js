@@ -21,7 +21,6 @@ export default class softwareDefine extends React.Component {
     componentWillUnmount() {
         // versionStore.removeServiceChangeListener(this._onServiceChange)
         versionStore.removeAll()
-        this.state.deploying = false
     }
     componentDidUpdate(){
     }
@@ -40,9 +39,6 @@ export default class softwareDefine extends React.Component {
         })
     }
 
-    
-
-    
     render() {
         // console.log('this.state.def', this.state.define)
         if(this.state.define == null){
