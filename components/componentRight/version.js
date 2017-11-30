@@ -230,7 +230,8 @@ export default class version extends React.Component {
                         setTimeout(()=>{getResponse(serviceName)}, RS)
                     }
                 } else {
-                    console.log('change version wrong', json)
+                        setTimeout(()=>{getResponse(serviceName)}, RS)
+                    //console.log('change version wrong', json)
                 }
             }
         }
